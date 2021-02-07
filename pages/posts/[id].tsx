@@ -5,6 +5,13 @@ import { getAllPostIds, getPostData } from '../../lib/posts';
 import Date from '../../components/date';
 import utilStyles from '../../styles/utils.module.css';
 
+// Note: [...id].tsx would be a catch all for /posts/a/b/c
+// In that case, return the id as an array of folder names ['a', 'b', 'c']
+
+//
+// Dev: Runs on every page load
+// Prod: Runs at build time
+//
 export async function getStaticProps({ params }) {
   const postData = await getPostData(params.id);
   return {
@@ -14,11 +21,15 @@ export async function getStaticProps({ params }) {
   };
 }
 
+//
+// Dev: Runs on every page load
+// Prod: Runs at build time
+//
 export async function getStaticPaths() {
   const paths = getAllPostIds();
   return {
     paths,
-    fallback: false,
+    fallback: false, // Used to set handling for non-existing paths
   };
 }
 
