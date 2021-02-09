@@ -3,6 +3,8 @@ import Image from 'next/image';
 import styles from './layout.module.css';
 import utilStyles from '../styles/utils.module.css';
 import Link from 'next/link';
+import path from 'path';
+import getConfig from 'next/config';
 
 const name = 'PwrDrvr';
 export const siteTitle = 'PwrDrvr Website';
@@ -27,7 +29,10 @@ export default function Layout({ children, home = undefined }) {
           <>
             <Image
               priority
-              src="/images/profile.jpg"
+              src={`${path.join(
+                getConfig().publicRuntimeConfig.staticFolder,
+                '/images/profile.jpg',
+              )}`}
               className={utilStyles.borderCircle}
               height={144}
               width={144}
@@ -41,7 +46,10 @@ export default function Layout({ children, home = undefined }) {
               <a>
                 <Image
                   priority
-                  src="/images/profile.jpg"
+                  src={`${path.join(
+                    getConfig().publicRuntimeConfig.staticFolder,
+                    '/images/profile.jpg',
+                  )}`}
                   className={utilStyles.borderCircle}
                   height={108}
                   width={108}
