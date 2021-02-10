@@ -5,17 +5,19 @@
 // next-images
 // const withImages = require('next-images')
 
+const appRoot = '/app/1.2.3';
+
 module.exports = {
   target: 'serverless',
   // webpack(config, _options) {
   //   config.resolve.modules.push(path.resolve('./'));
   //   return config;
   // },
-  basePath: '/app/1.2.3',
+  basePath: appRoot,
   // assetPrefix doesn't appear to do much
   // assetPrefix: '/app/1.2.3',
   publicRuntimeConfig: {
     // Will be available on both server and client
-    staticFolder: '/app/1.2.3',
+    staticFolder: appRoot,
   },
 };
