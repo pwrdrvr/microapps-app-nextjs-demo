@@ -8,6 +8,7 @@ import getConfig from 'next/config';
 
 const name = 'PwrDrvr';
 export const siteTitle = 'PwrDrvr Website';
+const isProd = process.env.NODE_ENV === 'production';
 
 export default function Layout({ children, home = undefined }) {
   return (
@@ -30,7 +31,7 @@ export default function Layout({ children, home = undefined }) {
             <Image
               priority
               src={`${path.join(
-                getConfig().publicRuntimeConfig.staticFolder,
+                isProd ? '' : getConfig().publicRuntimeConfig.staticFolder,
                 '/images/profile.jpg',
               )}`}
               className={utilStyles.borderCircle}
@@ -47,7 +48,7 @@ export default function Layout({ children, home = undefined }) {
                 <Image
                   priority
                   src={`${path.join(
-                    getConfig().publicRuntimeConfig.staticFolder,
+                    isProd ? '' : getConfig().publicRuntimeConfig.staticFolder,
                     '/images/profile.jpg',
                   )}`}
                   className={utilStyles.borderCircle}
