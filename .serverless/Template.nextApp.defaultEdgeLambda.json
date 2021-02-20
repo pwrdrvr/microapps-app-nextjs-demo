@@ -1,0 +1,17 @@
+{
+  "name": "ml55md-rlfgw2d",
+  "hash": "OoRmXWm7QH2pwe+Ti+E3Ecgf9ifLg+MJTdRVjK0vt50=",
+  "description": "Default Lambda@Edge for Next CloudFront distribution",
+  "memory": 512,
+  "timeout": 10,
+  "code": "/Users/huntharo/pwrdrvr/serverless-nextjs-demo/.serverless_nextjs/default-lambda",
+  "shims": [],
+  "handler": "index.handler",
+  "runtime": "nodejs12.x",
+  "env": {},
+  "role": {
+    "arn": "arn:aws:iam::239161478713:role/ml55md-f9ba36"
+  },
+  "arn": "arn:aws:lambda:us-east-1:239161478713:function:ml55md-rlfgw2d",
+  "region": "us-east-1"
+}

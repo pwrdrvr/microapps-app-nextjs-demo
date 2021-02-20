@@ -10,6 +10,10 @@ https://github.com/serverless-nextjs/serverless-next.js/tree/master/packages/ser
 
 `yarn build`
 
+## Delete old S3 Bucket
+
+`aws-vault exec pwrdrvr-admin -- aws s3 rm --recursive s3://66rb0ct-9zcltne/`
+
 ## Publishing
 
 ```
