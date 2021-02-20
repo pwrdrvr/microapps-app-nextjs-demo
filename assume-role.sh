@@ -2,7 +2,7 @@
 
 output="/tmp/assume-role-output.json"
 
-ACCOUNT_ID=$(aws sts get-caller-identity --profile pwrdrvr --query "Account" --output text)
+ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
 aws sts assume-role --profile pwrdrvr --role-arn "arn:aws:iam::$ACCOUNT_ID:role/AdminAccess" --role-session-name secrets-cdk-session --output json > $output
 AccessKeyId=$(cat $output | jq -r '.Credentials''.AccessKeyId')
 SecretAccessKey=$(cat $output | jq -r '.Credentials''.SecretAccessKey')

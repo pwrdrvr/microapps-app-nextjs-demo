@@ -2,10 +2,20 @@
 
 https://github.com/serverless-nextjs/serverless-next.js/tree/master/packages/serverless-components/nextjs-component/examples/create-next-app
 
+## Install Modules
+
+`yarn`
+
+## Build App
+
+`yarn build`
+
 ## Publishing
 
 ```
 # Publish the App
+rm .env # Can't have a .env... it messes up serverless
+export AWS_REGION=us-east-1
 aws-vault exec pwrdrvr-admin -- npx serverless
 
 # Remove all files from S3 bucket if needed
