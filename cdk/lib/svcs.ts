@@ -11,8 +11,12 @@ export interface ISvcsProps extends cdk.StackProps {
 export class SvcsStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props: ISvcsProps) {
     super(scope, id, props);
+    // Add a tag indicating this app can be managed by the
+    // MicroApp Deployer Lambda function
+    cdk.Tags.of(this).add('microapp-managed', 'true');
+
     //
-    // Reader Service
+    // Lambda Function
     //
     const svc = new lambda.DockerImageFunction(this, 'svc', {
       code: lambda.DockerImageCode.fromEcr(props.reposExports.svc),

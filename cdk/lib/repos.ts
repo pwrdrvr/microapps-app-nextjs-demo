@@ -12,8 +12,8 @@ export class ReposStack extends cdk.Stack implements IReposExports {
     super(scope, id, props);
 
     // The code that defines your stack goes here
-    this._repotsvc = new ecr.Repository(this, 'tssvcrepo2', {
-      repositoryName: 'tssvcrepo2',
+    this._repotsvc = new ecr.Repository(this, 'app-nextjs-demo-repo', {
+      repositoryName: 'app-nextjs-demo',
     });
   }
 
