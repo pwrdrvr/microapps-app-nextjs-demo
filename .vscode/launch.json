@@ -7,7 +7,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug Serverless",
+      "name": "serverless-deploy",
       "envFile": "${workspaceFolder}/.env",
       "runtimeVersion": "12.19.0",
       "runtimeExecutable": "node",
@@ -19,5 +19,34 @@
       "internalConsoleOptions": "neverOpen",
       "autoAttachChildProcesses": true
     },
+    {
+      "type": "aws-sam",
+      "request": "direct-invoke",
+      "name": "sam-debug",
+      "invokeTarget": {
+        "target": "api",
+        "templatePath": "./template.yaml",
+        "logicalId": "NextDemoApp"
+      },
+      "api": {
+        "path": "/app/1.2.3/_next/image",
+        "httpMethod": "get",
+        "querystring": "url=/images/profile.jpg&w=384&q=75"
+      }, 
+      "sam": {},
+      "aws": {}
+    },
+    {
+      "name": "Attach to SAM CLI",
+      "type": "node",
+      "request": "attach",
+      "address": "localhost",
+      "port": 5859,
+      // From the sam init example, it would be "${workspaceRoot}/hello-world"
+      "localRoot": "${workspaceRoot}/.serverless_nextjs/",
+      "remoteRoot": "/var/task",
+      "protocol": "inspector",
+      "stopOnEntry": false
+    }
   ]
 }
