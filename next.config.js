@@ -1,22 +1,24 @@
-module.exports = function(...args) {
-  let original = require('./next.config.original.1613418238692.js');
-  const finalConfig = {};
-  const target = { target: 'serverless' };
-  if (typeof original === 'function' && original.constructor.name === 'AsyncFunction') {
-    // AsyncFunctions will become promises
-    original = original(...args);
-  }
-  if (original instanceof Promise) {
-    // Special case for promises, as it's currently not supported
-    // and will just error later on
-    return original
-      .then((originalConfig) => Object.assign(finalConfig, originalConfig))
-      .then((config) => Object.assign(config, target));
-  } else if (typeof original === 'function') {
-    Object.assign(finalConfig, original(...args));
-  } else if (typeof original === 'object') {
-    Object.assign(finalConfig, original);
-  }
-  Object.assign(finalConfig, target);
-  return finalConfig;
-}
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+// const path = require('path');
+// next-compose-plugins
+// const withPlugins = require('next-compose-plugins');
+// next-images
+// const withImages = require('next-images')
+
+const appRoot = '/nextjs-demo/0.0.1';
+
+// eslint-disable-next-line no-undef
+module.exports = {
+  target: 'serverless',
+  // webpack(config, _options) {
+  //   config.resolve.modules.push(path.resolve('./'));
+  //   return config;
+  // },
+  basePath: appRoot,
+  // assetPrefix doesn't appear to do much
+  // assetPrefix: '/app/1.2.3',
+  publicRuntimeConfig: {
+    // Will be available on both server and client
+    staticFolder: appRoot,
+  },
+};

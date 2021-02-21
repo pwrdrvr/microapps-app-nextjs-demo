@@ -41,3 +41,13 @@ aws-lambda-update-svc: ## Update the lambda function to use latest image
 	@aws lambda update-function-code --function-name ${ECR_REPO} \
 		--image-uri ${ECR_HOST}/${IMAGE_TAG} --region=${REGION} \
 		--publish
+
+aws-create-alias-svc: ## Update the lambda function to use latest image
+	# Capture the Revision ID of the newly published code
+	$(eval VERSION:=$$(shell aws lambda update-function-code --function-name ${ECR_REPO} \
+		--image-uri ${ECR_HOST}/${IMAGE_TAG} --region=${REGION} \
+		--output json \
+		| jq -r ".Version"))
+	@echo "${VERSION}"
+	@aws lambda create-alias --function-name ${ECR_REPO} \
+		--name v0_0_1 --function-version '${VERSION}' --region=${REGION}
