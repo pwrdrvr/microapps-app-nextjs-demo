@@ -4,6 +4,7 @@ WORKDIR /app
 
 # Copy in the build output from `npx serverless`
 COPY .serverless_nextjs .
+COPY config.json .
 
 # TODO: Copy in the router code that binds the 3 lambdas together
 
