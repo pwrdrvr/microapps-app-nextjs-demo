@@ -1,0 +1,49 @@
+{
+  "version": "2.0",
+  "routeKey": "ANY /nextjs-demo/0.0.1/{proxy+}",
+  "rawPath": "/nextjs-demo/0.0.1/api/hello",
+  "rawQueryString": "",
+  "headers": {
+    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+    "accept-encoding": "gzip, deflate, br",
+    "accept-language": "en-US,en;q=0.9",
+    "cache-control": "no-cache",
+    "content-length": "0",
+    "host": "apps.pwrdrvr.com",
+    "pragma": "no-cache",
+    "sec-fetch-dest": "document",
+    "sec-fetch-mode": "navigate",
+    "sec-fetch-site": "none",
+    "sec-fetch-user": "?1",
+    "upgrade-insecure-requests": "1",
+    "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36 Edg/88.0.705.68",
+    "via": "2.0 3b1807627d3f1dc0cdeb157fc313627b.cloudfront.net (CloudFront)",
+    "x-amz-cf-id": "DaWX8gcZp0PQdO7tyAXuWiY6tiu2t8in0pmNKoYK53gjc7SOqc-2cQ==",
+    "x-amzn-trace-id": "Root=1-60330dcb-085875145807bfff3c209638",
+    "x-forwarded-for": "68.192.58.143, 52.46.46.178",
+    "x-forwarded-port": "443",
+    "x-forwarded-proto": "https"
+  },
+  "requestContext": {
+    "accountId": "239161478713",
+    "apiId": "4jssqkktsg",
+    "domainName": "apps.pwrdrvr.com",
+    "domainPrefix": "apps",
+    "http": {
+      "method": "GET",
+      "path": "/nextjs-demo/0.0.1/api/hello",
+      "protocol": "HTTP/1.1",
+      "sourceIp": "68.192.58.143",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36 Edg/88.0.705.68"
+    },
+    "requestId": "bH8XxiLBCYcEPVA=",
+    "routeKey": "ANY /nextjs-demo/0.0.1/{proxy+}",
+    "stage": "$default",
+    "time": "22/Feb/2021:01:50:03 +0000",
+    "timeEpoch": 1613958603279
+  },
+  "pathParameters": {
+    "proxy": "api/hello"
+  },
+  "isBase64Encoded": false
+}

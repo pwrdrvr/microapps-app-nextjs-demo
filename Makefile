@@ -51,3 +51,32 @@ aws-create-alias-svc: ## Update the lambda function to use latest image
 	@echo "${VERSION}"
 	@aws lambda create-alias --function-name ${ECR_REPO} \
 		--name v0_0_1 --function-version '${VERSION}' --region=${REGION}
+
+aws-update-alias-svc: ## Update the lambda function to use latest image
+	# Capture the Revision ID of the newly published code
+	$(eval VERSION:=$$(shell aws lambda update-function-code --function-name ${ECR_REPO} \
+		--image-uri ${ECR_HOST}/${IMAGE_TAG} --region=${REGION} \
+		--output json \
+		| jq -r ".Version"))
+	@echo "${VERSION}"
+	@aws lambda update-alias --function-name ${ECR_REPO} \
+		--name v0_0_1 --function-version '${VERSION}' --region=${REGION}
+
+#
+# API Gateway Payloads for Testing
+#
+
+curl-api-hello-fails: ## Send test request to local app
+	@curl -v -XPOST -H "Content-Type: application/json" \
+		http://localhost:9000/2015-03-31/functions/function/invocations \
+		--data-binary "@test-payloads/api-hello-fails.json"
+
+curl-home: ## Send test request to local app
+	@curl -v -XPOST -H "Content-Type: application/json" \
+		http://localhost:9000/2015-03-31/functions/function/invocations \
+		--data-binary "@test-payloads/home.json"
+
+curl-image: ## Send test request to local app
+	@curl -v -XPOST -H "Content-Type: application/json" \
+		http://localhost:9000/2015-03-31/functions/function/invocations \
+		--data-binary "@test-payloads/image.json"

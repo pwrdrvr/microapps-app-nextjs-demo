@@ -2,6 +2,6 @@
   "AppName": "nextjs-demo",
   "SemVer": "0.0.1",
   "DefaultFile": "",
-  "StaticAssetsPath": "./.serverless_nextjs/assets/",
+  "StaticAssetsPath": "./.serverless_nextjs/assets/nextjs-demo/0.0.1/",
   "LambdaARN": "arn:aws:lambda:us-east-2:239161478713:function:app-nextjs-demo:v0_0_1"
 }
