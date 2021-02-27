@@ -4,7 +4,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   res.statusCode = 200;
-  res.json({ name: 'John Doe' });
+  res.json({ name: 'John Doe', version: '0.0.2' });
 }
 
 // export default function handler(req, res) {

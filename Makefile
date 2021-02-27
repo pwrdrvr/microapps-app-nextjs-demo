@@ -38,10 +38,11 @@ aws-ecr-publish-svc: ## publish updated ECR docker image
 	@docker push ${ECR_HOST}/${IMAGE_TAG}
 	@docker push ${ECR_HOST}/${ECR_REPO}:latest
 
-aws-lambda-update-svc: ## Update the lambda function to use latest image
-	@aws lambda update-function-code --function-name ${ECR_REPO} \
-		--image-uri ${ECR_HOST}/${IMAGE_TAG} --region=${REGION} \
-		--publish
+# We don't use this anymore now that we have multiple versions
+# aws-lambda-update-svc: ## Update the lambda function to use latest image
+# 	@aws lambda update-function-code --function-name ${ECR_REPO} \
+# 		--image-uri ${ECR_HOST}/${IMAGE_TAG} --region=${REGION} \
+# 		--publish
 
 
 #$(eval VERSION=$$(shell aws lambda publish-version --function-name ${ECR_REPO} | jq -r ".Version"))
