@@ -39,13 +39,17 @@ aws-vault exec pwrdrvr-admin -- aws s3 rm --recursive s3://66rb0ct-9zcltne/
 ## Publishing - MicroApp
 
 - Update Lambda function code and create version alias
-  - Note: this is hard-coded to `v0_0_1` for now in the Makefile
+  - Locations to change
+    - Makefile: `IMAGE_TAG` (1.0.0) and `LAMBDA_ALIAS` (v_0_0_1)
+    - deploy.json
+    - next.config.js
+    - package.json (not required, but nice)
   - Note: this compiles the code and builds the docker image
   - `aws-vault exec pwrdrvr-admin -- make aws-ecr-login`
   - `aws-vault exec pwrdrvr-admin -- make aws-ecr-publish-svc`
-  - Create first time
+  - Create first time / new version number
     - `aws-vault exec pwrdrvr-admin -- make aws-create-alias-svc`
-  - Update alias if already exists
+  - Update version alias if already exists
     - `aws-vault exec pwrdrvr-admin -- make aws-update-alias-svc`
 - Deploy the updated HTML and link to lambda from api gateway
   - `export AWS_REGION=us-east-2`

@@ -4,7 +4,8 @@ AWS_ACCOUNT ?= 239161478713
 REGION ?= us-east-2
 ECR_HOST ?= ${AWS_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com
 ECR_REPO ?= app-nextjs-demo
-IMAGE_TAG ?= ${ECR_REPO}:0.0.1
+IMAGE_TAG ?= ${ECR_REPO}:0.0.2
+LAMBDA_ALIAS ?= v0_0_2
 
 help:
 	@echo "Commands:"
@@ -42,25 +43,29 @@ aws-lambda-update-svc: ## Update the lambda function to use latest image
 		--image-uri ${ECR_HOST}/${IMAGE_TAG} --region=${REGION} \
 		--publish
 
+
+#$(eval VERSION=$$(shell aws lambda publish-version --function-name ${ECR_REPO} | jq -r ".Version"))
 aws-create-alias-svc: ## Update the lambda function to use latest image
 	# Capture the Revision ID of the newly published code
+	@echo "Creating new alias, ${LAMBDA_ALIAS}, pointing to ${ECR_HOST}/${IMAGE_TAG}"
 	$(eval VERSION:=$$(shell aws lambda update-function-code --function-name ${ECR_REPO} \
 		--image-uri ${ECR_HOST}/${IMAGE_TAG} --region=${REGION} \
-		--output json \
+		--output json --publish \
 		| jq -r ".Version"))
-	@echo "${VERSION}"
+	@echo "New Lambda Version: ${ECR_REPO}/${VERSION}"
 	@aws lambda create-alias --function-name ${ECR_REPO} \
-		--name v0_0_1 --function-version '${VERSION}' --region=${REGION}
+		--name ${LAMBDA_ALIAS} --function-version '${VERSION}' --region=${REGION}
 
 aws-update-alias-svc: ## Update the lambda function to use latest image
 	# Capture the Revision ID of the newly published code
+	@echo "Updating existing alias, ${LAMBDA_ALIAS}, pointing to ${ECR_HOST}/${IMAGE_TAG}"
 	$(eval VERSION:=$$(shell aws lambda update-function-code --function-name ${ECR_REPO} \
 		--image-uri ${ECR_HOST}/${IMAGE_TAG} --region=${REGION} \
-		--output json \
+		--output json --publish \
 		| jq -r ".Version"))
-	@echo "${VERSION}"
+	@echo "New Lambda Version: ${ECR_REPO}/${VERSION}"
 	@aws lambda update-alias --function-name ${ECR_REPO} \
-		--name v0_0_1 --function-version '${VERSION}' --region=${REGION}
+		--name ${LAMBDA_ALIAS} --function-version '${VERSION}' --region=${REGION}
 
 #
 # API Gateway Payloads for Testing
