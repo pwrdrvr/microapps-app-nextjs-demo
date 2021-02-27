@@ -39,7 +39,7 @@ aws-vault exec pwrdrvr-admin -- aws s3 rm --recursive s3://66rb0ct-9zcltne/
 ## Publishing - MicroApp
 
 - Update Lambda function code and create version alias
-  - Note: this is hard-coded to `v1_0_0` for now in the Makefile
+  - Note: this is hard-coded to `v0_0_1` for now in the Makefile
   - Note: this compiles the code and builds the docker image
   - `aws-vault exec pwrdrvr-admin -- make aws-ecr-login`
   - `aws-vault exec pwrdrvr-admin -- make aws-ecr-publish-svc`
@@ -52,4 +52,4 @@ aws-vault exec pwrdrvr-admin -- aws s3 rm --recursive s3://66rb0ct-9zcltne/
   - `aws-vault exec pwrdrvr-admin -- dotnet run --project ~/pwrdrvr/microapps-cdk/src/PwrDrvr.MicroApps.DeployTool/`
 - Cleanup failed publish
   - `aws-vault exec pwrdrvr-admin -- aws s3 rm --recursive s3://pwrdrvr-apps/nextjs-demo/`
-  - `aws-vault exec pwrdrvr-admin -- aws s3 rm --recursive s3://pwrdrvr-apps/nextjs-demo-staging/`
+  - `aws-vault exec pwrdrvr-admin -- aws s3 rm --recursive s3://pwrdrvr-apps-staging/nextjs-demo/`
