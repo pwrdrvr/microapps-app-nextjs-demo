@@ -15,7 +15,8 @@ help:
 
 
 copy-router: ../serverless-nextjs-router/dist/index.js ## Copy compiled Next.js Router to output
-	rm .serverless_nextjs/index.js && cp ../serverless-nextjs-router/dist/index.js .serverless_nextjs/
+	-rm .serverless_nextjs/index.js
+	cp ../serverless-nextjs-router/dist/index.js .serverless_nextjs/
 
 start: ## Start App Docker Container
 	docker-compose up --build
