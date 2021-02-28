@@ -4,8 +4,8 @@ AWS_ACCOUNT ?= 239161478713
 REGION ?= us-east-2
 ECR_HOST ?= ${AWS_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com
 ECR_REPO ?= app-nextjs-demo
-IMAGE_TAG ?= ${ECR_REPO}:0.0.2
-LAMBDA_ALIAS ?= v0_0_2
+IMAGE_TAG ?= ${ECR_REPO}:0.0.3
+LAMBDA_ALIAS ?= v0_0_3
 
 help:
 	@echo "Commands:"
@@ -22,6 +22,8 @@ start: ## Start App Docker Container
 	docker-compose up --build
 
 sam-debug: ## Start App w/SAM Local for VS Code Debugging
+	-rm .serverless_nextjs/config.json
+	cp config.json .serverless_nextjs/
 	sam local start-api --debug-port 5859 --warm-containers EAGER
 
 #
@@ -55,8 +57,10 @@ aws-create-alias-svc: ## Update the lambda function to use latest image
 		--output json --publish \
 		| jq -r ".Version"))
 	@echo "New Lambda Version: ${ECR_REPO}/${VERSION}"
+	@sleep 10
 	@aws lambda create-alias --function-name ${ECR_REPO} \
 		--name ${LAMBDA_ALIAS} --function-version '${VERSION}' --region=${REGION}
+	@sleep 5
 
 aws-update-alias-svc: ## Update the lambda function to use latest image
 	# Capture the Revision ID of the newly published code
@@ -66,8 +70,43 @@ aws-update-alias-svc: ## Update the lambda function to use latest image
 		--output json --publish \
 		| jq -r ".Version"))
 	@echo "New Lambda Version: ${ECR_REPO}/${VERSION}"
+	@sleep 10
 	@aws lambda update-alias --function-name ${ECR_REPO} \
 		--name ${LAMBDA_ALIAS} --function-version '${VERSION}' --region=${REGION}
+	@sleep 5
+
+
+#
+# Fix API Gateay Permissions
+#
+
+fix-api-gateway-v0_0_1: ## Fix busted permissions on API Gateway Integrations
+	@aws lambda add-permission \
+		--statement-id microapps-version \
+		--action lambda:InvokeFunction \
+		--function-name "arn:aws:lambda:us-east-2:239161478713:function:app-nextjs-demo:v0_0_1" \
+		--principal apigateway.amazonaws.com \
+		--source-arn "arn:aws:execute-api:us-east-2:239161478713:4jssqkktsg/*/*/nextjs-demo/0.0.1"
+	@aws lambda add-permission \
+		--statement-id microapps-version-root \
+		--action lambda:InvokeFunction \
+		--function-name "arn:aws:lambda:us-east-2:239161478713:function:app-nextjs-demo:v0_0_1" \
+		--principal apigateway.amazonaws.com \
+		--source-arn "arn:aws:execute-api:us-east-2:239161478713:4jssqkktsg/*/*/nextjs-demo/0.0.1/{proxy+}"
+
+fix-api-gateway-v0_0_3: ## Fix busted permissions on API Gateway Integrations
+	@aws lambda add-permission \
+		--statement-id microapps-version \
+		--action lambda:InvokeFunction \
+		--function-name "arn:aws:lambda:us-east-2:239161478713:function:app-nextjs-demo:v0_0_3" \
+		--principal apigateway.amazonaws.com \
+		--source-arn "arn:aws:execute-api:us-east-2:239161478713:4jssqkktsg/*/*/nextjs-demo/0.0.2"
+	@aws lambda add-permission \
+		--statement-id microapps-version-root \
+		--action lambda:InvokeFunction \
+		--function-name "arn:aws:lambda:us-east-2:239161478713:function:app-nextjs-demo:v0_0_3" \
+		--principal apigateway.amazonaws.com \
+		--source-arn "arn:aws:execute-api:us-east-2:239161478713:4jssqkktsg/*/*/nextjs-demo/0.0.2/{proxy+}"
 
 #
 # API Gateway Payloads for Testing
