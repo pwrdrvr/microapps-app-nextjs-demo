@@ -2,6 +2,13 @@
 
 https://github.com/serverless-nextjs/serverless-next.js/tree/master/packages/serverless-components/nextjs-component/examples/create-next-app
 
+# Development
+
+- `nvm use`
+- `npm i`
+- `npm run dev`
+- Open in browser: `http://localhost:3000/nextjs-demo/0.0.0`
+
 ## Testing Locally with AWS SAM CLI
 
 - `aws-vault exec [profile] -- code .` to startup VS Code with AWS env set
@@ -14,11 +21,11 @@ https://github.com/serverless-nextjs/serverless-next.js/tree/master/packages/ser
 
 ## Install Modules
 
-`yarn`
+`npm i`
 
 ## Build App
 
-`yarn build`
+`npm run build`
 
 ## Delete old S3 Bucket
 

@@ -1,6 +1,6 @@
 {
   "name": "serverless-nextjs-demo",
-  "version": "0.0.3",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,6 +10,7 @@
     "lint-and-fix": "eslint ./ --ext .ts --ext .tsx --fix"
   },
   "dependencies": {
+    "@pwrdrvr/serverless-nextjs-router": "^0.9.0",
     "date-fns": "^2.17.0",
     "gray-matter": "^4.0.2",
     "next": "10.0.6",
