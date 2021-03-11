@@ -12,7 +12,7 @@ https://github.com/serverless-nextjs/serverless-next.js/tree/master/packages/ser
 # Publish New Version of Microapp
 
 - `aws-vault exec [profile] -- /bin/bash -l`
-- `npx microapps-publish --newversion 0.0.4`
+- `npx microapps-publish --newversion 0.0.7`
 
 ## Testing Locally with AWS SAM CLI
 
