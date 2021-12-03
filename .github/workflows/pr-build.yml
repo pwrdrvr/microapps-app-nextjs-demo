@@ -15,7 +15,7 @@ env:
   # This is used by the SharedProps to detect a PR build
   PR_NUMBER: ${{ github.event.pull_request.number }}
   AWS_REGION: us-east-2
-  APP_NAME: release
+  APP_NAME: nextjs-demo
   ENV: dev
   DEPLOYER_LAMBDA_NAME: microapps-deployer-dev
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID_DEV }}
