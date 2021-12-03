@@ -27,6 +27,7 @@
     "remark-html": "^13.0.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.13.10",
     "@pwrdrvr/microapps-publish": "^0.0.26",
     "@pwrdrvr/serverless-nextjs-router": "^0.0.2",
     "@sls-next/serverless-component": "^1.19.0",
@@ -35,6 +36,8 @@
     "@typescript-eslint/eslint-plugin": "^4.14.2",
     "@typescript-eslint/parser": "^4.14.2",
     "aws-cdk": "^1.134.0",
+    "babel-loader": "^8.2.2",
+    "babel-preset-react-app": "^10.0.0",
     "eslint": "^7.20.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^3.3.1",
