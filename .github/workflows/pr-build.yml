@@ -76,6 +76,10 @@ jobs:
         run: |
           npm run copy-router
 
+      - name: Copy in Posts
+        run: |
+          cp -R posts .serverless_nextjs/
+
       - name: Smoke Check CDK
         run: npx cdk list
 
