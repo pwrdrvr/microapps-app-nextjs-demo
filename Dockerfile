@@ -1,4 +1,4 @@
-FROM node:15-slim as base
+FROM node:16-slim as base
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ COPY config.json .
 RUN cd image-lambda && npm i sharp && \
   rm -rf node_modules/sharp/vendor/*/include/
 
-FROM public.ecr.aws/lambda/nodejs:12 AS final
+FROM public.ecr.aws/lambda/nodejs:14 AS final
 
 # Copy in the munged code
 COPY --from=base /app .

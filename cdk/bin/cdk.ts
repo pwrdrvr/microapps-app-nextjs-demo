@@ -1,15 +1,27 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
-import { ReposStack } from '../lib/repos';
 import { SvcsStack } from '../lib/svcs';
+import SharedTags from '../lib/SharedTags';
+import SharedProps from '../lib/SharedProps';
 
 const app = new cdk.App();
 
-// Add a tag indicating this app can be managed by the
-// MicroApp Deployer Lambda function
-cdk.Tags.of(app).add('microapp-managed', 'true');
-cdk.Tags.of(app).add('microapp-name', 'nextjs-demo');
+const shared = new SharedProps(app);
 
-const reposStack = new ReposStack(app, 'AppNextJsDemoRepos');
-new SvcsStack(app, 'AppNextJsDemoSvcs', { reposExports: reposStack });
+// We must set the env so that R53 zone imports will work
+const env: cdk.Environment = {
+  region: shared.region,
+  account: shared.account,
+};
+
+const appName = 'nextjs-demo';
+
+SharedTags.addSharedTags(app, { shared, appName, prSuffix: shared.prSuffix });
+
+new SvcsStack(app, 'app', {
+  env,
+  stackName: `microapps-app-${appName}${shared.envSuffix}${shared.prSuffix}`,
+  local: { appName },
+  shared,
+});
