@@ -19,8 +19,6 @@ env:
   ENV: dev
   DEPLOYER_LAMBDA_NAME: microapps-deployer-dev
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID_DEV }}
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
   CDK_CONTEXT_ARGS: "--context @pwrdrvr/microapps:s3BucketName=com.pwrdrvr-microapps-dev"
 
 jobs:
