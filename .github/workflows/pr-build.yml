@@ -78,15 +78,8 @@ jobs:
         run: |
           npm run copy-router
 
-      - name: Smoke Check CDK
-        run: npx cdk list
-        env:
-          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID_DEV }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
-
       - name: Deploy CDK Stack
-        run: npx cdk deploy --require-approval never app
+        run: npx cdk deploy --hotswap --require-approval never app
         env:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID_DEV }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}

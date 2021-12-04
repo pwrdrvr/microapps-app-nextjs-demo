@@ -7,7 +7,7 @@ import path from 'path';
 import getConfig from 'next/config';
 
 const name = 'PwrDrvr';
-export const siteTitle = 'PwrDrvr Website';
+export const siteTitle = 'PwrDrvr Website - 2';
 const isProd = process.env.NODE_ENV === 'production';
 
 export default function Layout({ children, home = undefined }) {
