@@ -37,7 +37,7 @@ export async function getStaticProps() {
 //   }
 // }
 
-export default function Home({ allPostsData }) {
+export default function Home({ allPostsData }): JSX.Element {
   return (
     <Layout home>
       <Head>

@@ -11,7 +11,7 @@ export default class SharedTags {
     // MicroApp Deployer Lambda function
     cdk.Tags.of(construct).add('microapp-managed', 'true');
     cdk.Tags.of(construct).add('microapp-name', args.appName);
-    cdk.Tags.of(construct).add('repository', 'https://github.com/pwrdrvr/serverless-nextjs-demo/');
+    cdk.Tags.of(construct).add('repository', 'https://github.com/pwrdrvr/microapps-app-release/');
     cdk.Tags.of(construct).add('application', `microapps-app-${args.appName}`);
   }
 

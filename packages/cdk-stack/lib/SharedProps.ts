@@ -34,6 +34,11 @@ export default class SharedProps {
     return this._stackName;
   }
 
+  private _tableName = 'microapps';
+  public get tableName(): string {
+    return this._tableName;
+  }
+
   private _s3BucketName = 'microapps';
   public get s3BucketName(): string {
     return this._s3BucketName;
@@ -50,11 +55,12 @@ export default class SharedProps {
   }
 
   constructor(scope: cdk.Construct) {
-    this._s3BucketName = scope.node.tryGetContext('@pwrdrvr/microapps:s3BucketName') || 'microapps';
+    this._tableName = scope.node.tryGetContext('@pwrdrvr/microapps:tableName') ?? 'microapps';
+    this._s3BucketName = scope.node.tryGetContext('@pwrdrvr/microapps:s3BucketName') ?? 'microapps';
     this._account =
-      scope.node.tryGetContext('@pwrdrvr/microapps:account') || process.env.CDK_DEFAULT_ACCOUNT;
+      scope.node.tryGetContext('@pwrdrvr/microapps:account') ?? process.env.CDK_DEFAULT_ACCOUNT;
     this._region =
-      scope.node.tryGetContext('@pwrdrvr/microapps:region') || process.env.CDK_DEFAULT_REGION;
+      scope.node.tryGetContext('@pwrdrvr/microapps:region') ?? process.env.CDK_DEFAULT_REGION;
 
     // Determine if we have a PR number
     if (process.env.CODEBUILD_SOURCE_VERSION !== undefined) {
