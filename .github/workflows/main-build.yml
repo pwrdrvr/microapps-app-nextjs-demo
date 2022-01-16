@@ -39,11 +39,11 @@ jobs:
         run: npm ci
 
       - name: Install CDK Node Modules
-        working-directory: cdk/
+        working-directory: packages/cdk-stack/
         run: npm ci
 
       - name: Build CDK TypeScript
-        working-directory: cdk/
+        working-directory: packages/cdk-stack/
         run: |
           npm run build --if-present
 
