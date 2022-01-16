@@ -64,6 +64,8 @@ jobs:
         working-directory: packages/app/node_modules
         run: |
           ln -s ../../node_modules/.bin
+          pwd
+          find .
           ls -la .bin/next
           ls -la .bin/
 
