@@ -3,11 +3,11 @@
 
 # Workflow syntax reference:
 # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
-name: PR Build
+name: CI
 
 on:
-  push:
-    branches: [ main ]
+  # push:
+  #   branches: [ main ]
   pull_request:
     branches: [ main ]
 
