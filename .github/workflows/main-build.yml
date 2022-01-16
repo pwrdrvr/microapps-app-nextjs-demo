@@ -7,7 +7,7 @@ name: Main Build
 
 on:
   push:
-    branches: [ main ]
+    branches: [ none ]
   # pull_request:
   #   branches: [ main ]
 
@@ -36,10 +36,6 @@ jobs:
           cache-dependency-path: '**/package-lock.json'
 
       - name: Install Node Modules
-        run: npm ci
-
-      - name: Install CDK Node Modules
-        working-directory: packages/cdk-stack/
         run: npm ci
 
       - name: Build CDK TypeScript
