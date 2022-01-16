@@ -18,7 +18,6 @@ env:
   PR_NUMBER: ${{ github.event.pull_request.number }}
   NODE_ENV: prod
   APP_NAME: nextjs-demo
-  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID_GHP }}
   AWS_REGION: us-east-2
 
 jobs:
@@ -27,12 +26,14 @@ jobs:
       contents: read
       id-token: write
     runs-on: ubuntu-latest
+    environment:
+      name: ghpublic
     steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-session-name: microapps-app-serverless-nextjs-demo-build
-          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/builder-writeRole
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/builder-writeRole
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Destroy CDK Stack
