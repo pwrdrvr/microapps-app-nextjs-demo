@@ -64,8 +64,6 @@ jobs:
         working-directory: packages/app/node_modules
         run: |
           ln -s ../../../node_modules/.bin
-          pwd
-          find .
 
       - name: Build All TypeScript
         run: npm run build
