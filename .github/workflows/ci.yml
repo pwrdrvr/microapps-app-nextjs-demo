@@ -62,7 +62,11 @@ jobs:
 
       - name: Link to node_modules - App
         working-directory: packages/app/node_modules
-        run: ln -s ../../node_modules/.bin
+        run: |
+          ln -s ../../node_modules/.bin
+          ls -la node_modules/.bin/next
+          ls -la node_modules/.bin/next
+          ls -la node_modules/.bin
 
       - name: Build All TypeScript
         run: npm run build
