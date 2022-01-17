@@ -136,7 +136,7 @@ jobs:
     env:
       ENV: prod
       DEPLOYER_LAMBDA_NAME: microapps-core-ghpublic-deployer-prod
-      CDK_CONTEXT_ARGS: "--context @pwrdrvr/microapps:tableName=microapps-ghpublic-prod --context @pwrdrvr/microapps:s3BucketName=com.pwrdrvr.ghpublic-microapps-ghpublic-prod"
+      CDK_CONTEXT_ARGS: "--context @pwrdrvr/microapps:s3BucketName=com.pwrdrvr.ghpublic.apps"
     steps:
       - uses: actions/checkout@v2
 
@@ -209,7 +209,7 @@ jobs:
     env:
       ENV: dev
       DEPLOYER_LAMBDA_NAME: microapps-deployer-dev
-      CDK_CONTEXT_ARGS: "--context @pwrdrvr/microapps:tableName=microapps-dev --context @pwrdrvr/microapps:s3BucketName=com.pwrdrvr.dev-microapps-dev"
+      CDK_CONTEXT_ARGS: "--context @pwrdrvr/microapps:s3BucketName=com.pwrdrvr.dev-microapps-dev"
     steps:
       - uses: actions/checkout@v2
 
@@ -282,7 +282,7 @@ jobs:
     env:
       ENV: qa
       DEPLOYER_LAMBDA_NAME: microapps-deployer-qa
-      CDK_CONTEXT_ARGS: "--context @pwrdrvr/microapps:tableName=microapps-qa --context @pwrdrvr/microapps:s3BucketName=com.pwrdrvr.qa-microapps-qa"
+      CDK_CONTEXT_ARGS: "--context @pwrdrvr/microapps:s3BucketName=com.pwrdrvr.qa-microapps-qa"
     steps:
       - uses: actions/checkout@v2
 
@@ -355,7 +355,7 @@ jobs:
     env:
       ENV: prod
       DEPLOYER_LAMBDA_NAME: microapps-deployer-prod
-      CDK_CONTEXT_ARGS: "--context @pwrdrvr/microapps:tableName=microapps-prod --context @pwrdrvr/microapps:s3BucketName=com.pwrdrvr-microapps-prod"
+      CDK_CONTEXT_ARGS: "--context @pwrdrvr/microapps:s3BucketName=com.pwrdrvr-microapps-prod"
     steps:
       - uses: actions/checkout@v2
 

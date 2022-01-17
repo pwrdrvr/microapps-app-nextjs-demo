@@ -1,7 +1,6 @@
 import { existsSync } from 'fs';
 import * as cdk from '@aws-cdk/core';
 import * as lambda from '@aws-cdk/aws-lambda';
-import * as dynamodb from '@aws-cdk/aws-dynamodb';
 import * as s3 from '@aws-cdk/aws-s3';
 import * as logs from '@aws-cdk/aws-logs';
 import * as path from 'path';
@@ -23,13 +22,6 @@ export interface MicroAppsAppNextjsDemoProps {
    * Next.js apps need access to the static assets bucket.
    */
   staticAssetsS3Bucket: s3.IBucket;
-
-  /**
-   * DynamoDB table for data displayed / edited in the app.
-   *
-   * This table is used by @pwrdrvr/microapps-datalib.
-   */
-  table: dynamodb.ITable;
 
   /**
    * Removal Policy to pass to assets (e.g. Lambda function)
@@ -77,7 +69,6 @@ export class MicroAppsAppNextjsDemo extends cdk.Construct implements IMicroAppsA
       removalPolicy,
       sharpLayer,
       staticAssetsS3Bucket,
-      table,
     } = props;
 
     // Create Lambda Function
@@ -102,7 +93,6 @@ export class MicroAppsAppNextjsDemo extends cdk.Construct implements IMicroAppsA
         AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
         NODE_ENV: nodeEnv,
         S3BUCKETNAME: staticAssetsS3Bucket.bucketName,
-        DATABASE_TABLE_NAME: table.tableName,
       },
       logRetention: logs.RetentionDays.ONE_MONTH,
       memorySize: 1769,
@@ -115,10 +105,6 @@ export class MicroAppsAppNextjsDemo extends cdk.Construct implements IMicroAppsA
     if (sharpLayer !== undefined) {
       this._lambdaFunction.addLayers(sharpLayer);
     }
-
-    // Give permission to the table
-    table.grantReadWriteData(this._lambdaFunction);
-    table.grant(this._lambdaFunction, 'dynamodb:DescribeTable');
 
     // S3 bucket for deployed apps
     // Next.js apps need read/write access to their directory

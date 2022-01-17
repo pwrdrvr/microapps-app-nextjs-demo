@@ -8,7 +8,6 @@
     "@aws-cdk/aws-secretsmanager:parseOwnedSecretName": true,
     "@aws-cdk/aws-kms:defaultKeyPolicies": true,
     "@aws-cdk/aws-s3:grantWriteWithoutAcl": true,
-    "@pwrdrvr/microapps:tableName": "microapps-dev",
     "@pwrdrvr/microapps:s3BucketName": "com.pwrdrvr-microapps-dev"
   }
 }
