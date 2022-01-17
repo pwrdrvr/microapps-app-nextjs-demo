@@ -1,6 +1,5 @@
 import * as cdk from '@aws-cdk/core';
 import * as lambda from '@aws-cdk/aws-lambda';
-import * as dynamodb from '@aws-cdk/aws-dynamodb';
 import * as s3 from '@aws-cdk/aws-s3';
 import SharedProps from './SharedProps';
 import { MicroAppsAppNextjsDemo } from '@pwrdrvr/microapps-app-nextjs-demo-cdk';
@@ -30,7 +29,6 @@ export class SvcsStack extends cdk.Stack {
     const app = new MicroAppsAppNextjsDemo(this, 'app', {
       functionName: `microapps-app-${appName}${shared.envSuffix}${shared.prSuffix}`,
       staticAssetsS3Bucket: s3.Bucket.fromBucketName(this, 'apps-bucket', shared.s3BucketName),
-      table: dynamodb.Table.fromTableName(this, 'apps-table', shared.tableName),
       nodeEnv: shared.env as Env,
       removalPolicy: shared.isPR ? cdk.RemovalPolicy.DESTROY : cdk.RemovalPolicy.RETAIN,
       sharpLayer,
