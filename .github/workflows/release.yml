@@ -13,10 +13,13 @@ on:
     types: [published]
 
   # workflow_dispatch:
+env:
+  APP_PACKAGE_NAME: '@pwrdrvr/microapps-app-nextjs-demo'
 
 jobs:
-  release:
+  build-app:
     if: startsWith( github.ref, 'refs/tags/v')
+    name: Build App
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -32,22 +35,14 @@ jobs:
           node-version: 16
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
-          registry-url: 'https://registry.npmjs.org'
 
       - name: Install Node Modules
         run: npm ci
-
 
       - name: Set git identity
         run: |-
           git config user.name "Automation"
           git config user.email "github-actions@github.com"
-
-      # - name: npm 7 has a bug with from-git, so bump to npm 8
-      #   run: npm i -g npm@8
-      
-      # - name: Print npm version
-      #   run: npm --version
 
       # - name: Bump Version by Patch - Push Tag to GH - Apply to Package.json
       #   run: |
@@ -66,7 +61,6 @@ jobs:
         run: |
           npm version ${PACKAGE_VERSION} --no-git-tag-version --allow-same-version --workspaces
 
-
       #
       # Do the build
       #
@@ -75,12 +69,21 @@ jobs:
         run: |
           ln -s ../../../../node_modules/.bin/next
 
+      # Fixes errors due to JSII tsconfig.json not ignoring libs
+      # node_modules/flatpickr/dist/types/instance.d.ts(37,21): error TS2304: Cannot find name 'Node'.
+      # Error: node_modules/flatpickr/dist/types/instance.d.ts(82,56): error TS2304: Cannot find name 'HTMLElementTagNameMap'.
+      # Error: node_modules/@types/carbon-components-react/lib/components/FileUploader/FileUploaderDropContainer.d.ts(46,80): error TS2304: Cannot find name 'File'.
+      # Error: node_modules/@types/overlayscrollbars/index.d.ts(348,19): error TS2304: Cannot find name 'NodeListOf'.
+      - name: Modify cdk-construct tsconfig.json
+        run: |
+          mv ./packages/cdk-construct/tsconfig.json ./packages/cdk-construct/tsconfig.jsii.json
+          jq ".compilerOptions += { \"skipLibCheck\": true }" ./packages/cdk-construct/tsconfig.jsii.json > ./packages/cdk-construct/tsconfig.json
+
       - name: Build All TypeScript
         run: npm run build
 
       - name: Lint
         run: npm run lint
-
 
       - name: Check for new commits
         id: git_remote
@@ -89,15 +92,15 @@ jobs:
 
       - name: Apply Next.js Version
         run: |
-          npx -w @pwrdrvr/microapps-app-nextjs-demo microapps-publish nextjs-version -n ${PACKAGE_VERSION}
+          npx -w ${APP_PACKAGE_NAME} microapps-publish nextjs-version -n ${PACKAGE_VERSION}
 
       - name: Build Serverless Next.js
         run: |
-          npx -w @pwrdrvr/microapps-app-nextjs-demo serverless
+          npx -w ${APP_PACKAGE_NAME} serverless
 
       - name: Copy in Serverless-NextJS-Router
         run: |
-          npm run -w @pwrdrvr/microapps-app-nextjs-demo copy-router
+          npm run -w ${APP_PACKAGE_NAME} copy-router
 
       # Remove Sharp package from image-lambda
       # Consumer can install sharp and copy to this location
@@ -107,41 +110,192 @@ jobs:
         run: |
           rm -rf .serverless_nextjs/image-lambda/node_modules
 
+      # Upload Artifact
+      - name: Zip Package
+        working-directory: packages/app/
+        run: zip -r serverless_nextjs.zip .serverless_nextjs
+      - name: Upload Zip
+        uses: actions/upload-artifact@v2
+        with:
+          name: app_zip
+          path: packages/app/serverless_nextjs.zip
+
+  build-cdk-construct:
+    name: Build CDK Construct
+    needs: [ build-app ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      prSuffix: ${{ steps.prSuffix.outputs.prSuffix }}
+      packageVersion: ${{ steps.packageVersion.outputs.packageVersion }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+
+      - name: Set git identity
+        run: |-
+          git config user.name "Automation"
+          git config user.email "github-actions@github.com"
+
+      # - name: Bump Version by Patch - Push Tag to GH - Apply to Package.json
+      #   run: |
+      #     npm version patch
+      #     git push —-tags
+
+      - name: Apply Version from Git Tag
+        run: |
+          npm version from-git --no-git-tag-version
+
+      - name: Extract Package Version
+        run: |
+          echo 'PACKAGE_VERSION='$(node -p -e "require('./package.json').version") >> $GITHUB_ENV
+
+      - name: Apply NPM Version to Everything
+        run: |
+          npm version ${PACKAGE_VERSION} --no-git-tag-version --allow-same-version --workspaces
+
+      # Fixes errors due to JSII tsconfig.json not ignoring libs
+      # node_modules/flatpickr/dist/types/instance.d.ts(37,21): error TS2304: Cannot find name 'Node'.
+      # Error: node_modules/flatpickr/dist/types/instance.d.ts(82,56): error TS2304: Cannot find name 'HTMLElementTagNameMap'.
+      # Error: node_modules/@types/carbon-components-react/lib/components/FileUploader/FileUploaderDropContainer.d.ts(46,80): error TS2304: Cannot find name 'File'.
+      # Error: node_modules/@types/overlayscrollbars/index.d.ts(348,19): error TS2304: Cannot find name 'NodeListOf'.
+      # - name: Modify cdk-construct tsconfig.json
+      #   run: |
+      #     mv ./packages/cdk-construct/tsconfig.json ./packages/cdk-construct/tsconfig.jsii.json
+      #     jq ".compilerOptions += { \"skipLibCheck\": true }" ./packages/cdk-construct/tsconfig.jsii.json > ./packages/cdk-construct/tsconfig.json
+
+      - name: Check for new commits
+        id: git_remote
+        run: echo ::set-output name=latest_commit::"$(git ls-remote origin -h ${{
+          github.ref }} | cut -f1)"
+
+      #
+      # Download the App Artifact and put it in the right place
+      # Can't build this in the jsii/superchain because `npm ci`
+      # gets OOM killed at 2 GB of RAM usage for some reason.
+      #
+      - name: Download Artifact - App
+        uses: actions/download-artifact@v2
+        with:
+          name: app_zip
+          path: packages/app/
+
+      - name: Unzip Artifact - App
+        working-directory: packages/app/
+        run: unzip serverless_nextjs.zip
+
+      #
+      # Build Construct with JSII
+      #
+
+      - name: Install CDK Construct Deps
+        working-directory: packages/cdk-construct/
+        run: |
+          npm ci
+
       # Copy the serverless_nextjs build into the Construct output
       # Move static files out of serverless_nextjs
-      - name: Zip Package
+      - name: Move App to Right Place
         run: |
-          mv packages/app/.serverless_nextjs packages/cdk-construct/lib
+          mkdir -p packages/cdk-construct/lib/
+          mv packages/app/.serverless_nextjs packages/cdk-construct/lib/
           mv packages/cdk-construct/lib/.serverless_nextjs/assets packages/cdk-construct/lib/.static_files
+          find packages/cdk-construct/lib/
 
-      # Create the Release on GH now that build has finished
-      # - if: ${{ steps.git_remote.outputs.latest_commit == github.sha }}
-      #   name: Create Release
-      #   run: |
-      #     gh release create v${PACKAGE_VERSION} -t v${PACKAGE_VERSION}
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      #
-      # Publish other non-JSII Artifacts to NPM
-      #
-      # - name: NPM registry authentication
-      #   run: npm set //registry.npmjs.org/:_authToken ${{ secrets.NPMJSORG_PUBLISH_TOKEN }}
-
-      - name: Publish CDK Construct
+      - name: Build with JSII
         working-directory: packages/cdk-construct/
-        run: npm publish
+        run: |
+          npm run build:jsii
+          npm run build:jsii-docgen
+          npm run build:jsii-pacmak
+
+      - name: Upload CDK Construct Artifact
+        if: ${{ steps.git_remote.outputs.latest_commit == github.sha }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: cdk-construct-dist
+          path: packages/cdk-construct/dist
+    container:
+      image: jsii/superchain
+
+  #
+  # Release Assets
+  #
+  release-assets:
+    name: Release Assets
+    needs: [ build-cdk-construct ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Use Node.js 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Download CDK Construct build artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: cdk-construct-dist
+          path: packages/cdk-construct/dist
+
+      #
+      # PyPI
+      #
+      # https://github.com/cdklabs/jsii-release#pypi
+      - name: Release CDK Construct - PyPI
+        working-directory: packages/cdk-construct/
+        run: |
+          npx -p jsii-release@latest jsii-release-pypi
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPMJSORG_PUBLISH_TOKEN }}
+          TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
 
-      # - uses: mikeal/merge-release@master
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-      #     DEPLOY_DIR: packages/cdk-construct/
-      #     SRC_PACKAGE_DIR: packages/cdk-construct/
+      # Docs for GitHub Nuget
+      # https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
+      # Docs for jsii-release-nuget
+      # https://github.com/cdklabs/jsii-release#nuget
+      - name: Release CDK Construct - NuGet.org
+        working-directory: packages/cdk-construct/
+        run: |
+          npx -p jsii-release@latest jsii-release-nuget
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_MICROAPPS }}
 
-      # - uses: JS-DevTools/npm-publish@v1
-      #   with:
-      #     dry-run: true
-      #     token: ${{ secrets.NPMJSORG_PUBLISH_TOKEN }}
+      # Docs for GitHub Maven
+      # https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry
+      # Docs for jsii-release-maven
+      # https://github.com/cdklabs/jsii-release#maven
+      - name: Release CDK Construct - Maven Central
+        working-directory: packages/cdk-construct/
+        run: |
+          npx -p jsii-release@latest jsii-release-maven
+        env:
+          MAVEN_ENDPOINT: https://s01.oss.sonatype.org
+          MAVEN_STAGING_PROFILE_ID: 3127710ac57dbb
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+          MAVEN_GPG_PRIVATE_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          MAVEN_GPG_PRIVATE_KEY_PASSPHRASE: ${{ secrets.MAVEN_GPG_PRIVATE_KEY_PASSPHRASE }}
+
+      # Docs for different release steps and params
+      # https://www.npmjs.com/package/jsii-release
+      # Docs for jsii-release-npm
+      # https://github.com/cdklabs/jsii-release#npm
+      - name: Release CDK Construct - npmjs.org
+        working-directory: packages/cdk-construct/
+        run: |
+          npx -p jsii-release@latest jsii-release-npm
+        env:
+          NPM_TOKEN: ${{ secrets.NPMJSORG_PUBLISH_TOKEN }} # jsii-release requires NPM_TOKEN as an env var
+
+    container:
+      image: jsii/superchain

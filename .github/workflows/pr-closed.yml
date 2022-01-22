@@ -23,12 +23,12 @@ env:
 
 jobs:
   cleanup-pr:
+    environment:
+      name: ghpublic
     permissions:
       contents: read
       id-token: write
     runs-on: ubuntu-latest
-    environment:
-      name: ghpublic
     steps:
       - uses: actions/checkout@v2
 
@@ -53,7 +53,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-session-name: microapps-app-serverless-${{ env.APP_NAME }}-build
+          role-session-name: microapps-app-${{ env.APP_NAME }}-build
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/builder-writeRole
           aws-region: ${{ env.AWS_REGION }}
 

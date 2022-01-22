@@ -1,10 +1,14 @@
 import { existsSync } from 'fs';
-import * as cdk from '@aws-cdk/core';
-import * as lambda from '@aws-cdk/aws-lambda';
-import * as s3 from '@aws-cdk/aws-s3';
-import * as logs from '@aws-cdk/aws-logs';
+import { Construct } from 'constructs';
+import { RemovalPolicy, Duration } from 'aws-cdk-lib';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as logs from 'aws-cdk-lib/aws-logs';
 import * as path from 'path';
 
+/**
+ * Properties to initialize an instance of `MicroAppsAppNextjsDemo`.
+ */
 export interface MicroAppsAppNextjsDemoProps {
   /**
    * Name for the Lambda function.
@@ -14,41 +18,52 @@ export interface MicroAppsAppNextjsDemoProps {
    *
    * @default auto-generated
    */
-  functionName?: string;
+  readonly functionName?: string;
 
   /**
    * Bucket with the static assets of the app.
    *
    * Next.js apps need access to the static assets bucket.
    */
-  staticAssetsS3Bucket: s3.IBucket;
+  readonly staticAssetsS3Bucket: s3.IBucket;
 
   /**
    * Removal Policy to pass to assets (e.g. Lambda function)
    */
-  removalPolicy?: cdk.RemovalPolicy;
+  readonly removalPolicy?: RemovalPolicy;
 
   /**
    * `sharp` node module Lambda Layer for Next.js image adjustments
    *
    * @example https://github.com/zoellner/sharp-heic-lambda-layer/pull/3
    */
-  sharpLayer?: lambda.ILayerVersion;
+  readonly sharpLayer?: lambda.ILayerVersion;
 
   /**
    * NODE_ENV to set on Lambda
    */
-  nodeEnv?: 'dev' | 'qa' | 'prod';
+  readonly nodeEnv?: 'dev' | 'qa' | 'prod';
 }
 
+/**
+ * Represents a NextJS Demo app
+ */
 export interface IMicroAppsAppNextjsDemo {
   /**
    * The Lambda function created
    */
-  lambdaFunction: lambda.IFunction;
+  readonly lambdaFunction: lambda.IFunction;
 }
 
-export class MicroAppsAppNextjsDemo extends cdk.Construct implements IMicroAppsAppNextjsDemo {
+/**
+ * NextJS Demo app for MicroApps framework.
+ *
+ * @remarks
+ * Implemented from the NextJS tutorial.
+ *
+ * @see {@link https://nextjs.org/learn/basics/create-nextjs-app | Create NextJS App }
+ */
+export class MicroAppsAppNextjsDemo extends Construct implements IMicroAppsAppNextjsDemo {
   private _lambdaFunction: lambda.Function;
   public get lambdaFunction(): lambda.IFunction {
     return this._lambdaFunction;
@@ -60,7 +75,7 @@ export class MicroAppsAppNextjsDemo extends cdk.Construct implements IMicroAppsA
    * @param id
    * @param props
    */
-  constructor(scope: cdk.Construct, id: string, props: MicroAppsAppNextjsDemoProps) {
+  constructor(scope: Construct, id: string, props: MicroAppsAppNextjsDemoProps) {
     super(scope, id);
 
     const {
@@ -96,7 +111,7 @@ export class MicroAppsAppNextjsDemo extends cdk.Construct implements IMicroAppsA
       },
       logRetention: logs.RetentionDays.ONE_MONTH,
       memorySize: 1769,
-      timeout: cdk.Duration.seconds(15),
+      timeout: Duration.seconds(15),
     });
     if (removalPolicy !== undefined) {
       this._lambdaFunction.applyRemovalPolicy(removalPolicy);
