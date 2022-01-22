@@ -1,3 +1,4 @@
+![Build/Deploy CI](https://github.com/pwrdrvr/serverless-nextjs-demo/actions/workflows/ci.yml/badge.svg) ![Main Build](https://github.com/pwrdrvr/serverless-nextjs-demo/actions/workflows/jsii.yml/badge.svg) ![Deploy](https://github.com/pwrdrvr/serverless-nextjs-demo/actions/workflows/deploy.yml/badge.svg) ![Release](https://github.com/pwrdrvr/serverless-nextjs-demo/actions/workflows/release.yml/badge.svg)
 # From Serverless Next.js Demo Instructions
 
 https://github.com/serverless-nextjs/serverless-next.js/tree/master/packages/serverless-components/nextjs-component/examples/create-next-app

@@ -6,8 +6,10 @@
 name: CI
 
 on:
-  # push:
-  #   branches: [ main ]
+  # Deploys with overwrite as current package.json version to main deploy
+  # New versions are deployed with `deploy` build
+  push:
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -15,6 +17,7 @@ env:
   # This is used by the SharedProps to detect a PR build
   PR_NUMBER: ${{ github.event.pull_request.number }}
   APP_NAME: nextjs-demo
+  APP_PACKAGE_NAME: '@pwrdrvr/microapps-app-nextjs-demo'
   ENV: prod
   DEPLOYER_LAMBDA_NAME: microapps-core-ghpublic-deployer-prod
   AWS_REGION: us-east-2
@@ -25,7 +28,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       prSuffix: ${{ steps.prSuffix.outputs.prSuffix }}
-      prSuffixPackageVersion: ${{ steps.prSuffix.outputs.prSuffixPackageVersion }}
       packageVersion: ${{ steps.packageVersion.outputs.packageVersion }}
     steps:
       - uses: actions/checkout@v2
@@ -35,14 +37,18 @@ jobs:
         run: |
           if [ -n "${PR_NUMBER}" ]; then
             echo "::set-output name=prSuffix::-pr-${PR_NUMBER}"
-            echo "::set-output name=prSuffixPackageVersion::-pr.${PR_NUMBER}"
             echo "PR_SUFFIX=-pr-"${PR_NUMBER} >> $GITHUB_ENV
-            echo "PR_SUFFIX_PACKAGE_VERSION=-pr."${PR_NUMBER} >> $GITHUB_ENV
           else
             echo "::set-output name=prSuffix::"
-            echo "::set-output name=prSuffixPackageVersion::"
             echo "PR_SUFFIX=" >> $GITHUB_ENV
-            echo "PR_SUFFIX_PACKAGE_VERSION=" >> $GITHUB_ENV
+          fi
+
+      - name: Set Hotswap Flag
+        run: |
+          if [ -n "${PR_NUMBER}" ]; then
+            echo "HOTSWAP_FLAG=--hotswap" >> $GITHUB_ENV
+          else
+            echo "HOTSWAP_FLAG=" >> $GITHUB_ENV
           fi
 
       - name: Extract Current NPM Version
@@ -52,8 +58,13 @@ jobs:
       - name: Compute NPM Version
         id: packageVersion
         run: |
-          echo "::set-output name=packageVersion::${PACKAGE_VERSION_ORIG}${PR_SUFFIX_PACKAGE_VERSION}"
-          echo 'PACKAGE_VERSION='${PACKAGE_VERSION_ORIG}${PR_SUFFIX_PACKAGE_VERSION} >> $GITHUB_ENV
+          if [ -n "${PR_NUMBER}" ]; then
+            echo 'PACKAGE_VERSION='${PACKAGE_VERSION_ORIG}-pr.${PR_NUMBER} >> $GITHUB_ENV
+            echo "::set-output name=packageVersion::${PACKAGE_VERSION_ORIG}-pr.${PR_NUMBER}"
+          else
+            echo 'PACKAGE_VERSION='${PACKAGE_VERSION_ORIG} >> $GITHUB_ENV
+            echo "::set-output name=packageVersion::${PACKAGE_VERSION_ORIG}"
+          fi
 
       - name: Use Node.js 16
         uses: actions/setup-node@v2
@@ -70,6 +81,17 @@ jobs:
         run: |
           ln -s ../../../../node_modules/.bin/next
 
+      # Fixes errors due to JSII tsconfig.json not ignoring libs
+      # node_modules/flatpickr/dist/types/instance.d.ts(37,21): error TS2304: Cannot find name 'Node'.
+      # Error: node_modules/flatpickr/dist/types/instance.d.ts(82,56): error TS2304: Cannot find name 'HTMLElementTagNameMap'.
+      # Error: node_modules/@types/carbon-components-react/lib/components/FileUploader/FileUploaderDropContainer.d.ts(46,80): error TS2304: Cannot find name 'File'.
+      # Error: node_modules/@types/overlayscrollbars/index.d.ts(348,19): error TS2304: Cannot find name 'NodeListOf'.
+      - name: Modify cdk-construct tsconfig.json
+        run: |
+          mv ./packages/cdk-construct/tsconfig.json ./packages/cdk-construct/tsconfig.jsii.json
+          jq ".compilerOptions += { \"skipLibCheck\": true }" ./packages/cdk-construct/tsconfig.jsii.json > ./packages/cdk-construct/tsconfig.json
+
+
       - name: Build All TypeScript
         run: npm run build
 
@@ -77,6 +99,7 @@ jobs:
         run: npm run lint
 
       - name: Apply NPM Version
+        if: github.event_name == 'pull_request'
         run: |
           npm version ${PACKAGE_VERSION} --no-git-tag-version --workspaces
 
@@ -90,15 +113,15 @@ jobs:
 
       - name: Apply Next.js Version
         run: |
-          npx -w @pwrdrvr/microapps-app-nextjs-demo microapps-publish nextjs-version -n ${PACKAGE_VERSION}
+          npx -w ${APP_PACKAGE_NAME} microapps-publish nextjs-version -n ${PACKAGE_VERSION}
 
       - name: Build Serverless Next.js
         run: |
-          npx -w @pwrdrvr/microapps-app-nextjs-demo serverless
+          npx -w ${APP_PACKAGE_NAME} serverless
 
       - name: Copy in Serverless-NextJS-Router
         run: |
-          npm run -w @pwrdrvr/microapps-app-nextjs-demo copy-router
+          npm run -w ${APP_PACKAGE_NAME} copy-router
 
       # We are using a shared Sharp node_modules layer
       - name: Remove Sharp from App Build
@@ -128,7 +151,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: ghpublic
-      url: https://apps.ghpublic.pwrdrvr.com/nextjs-demo/${{ needs.build.outputs.packageVersion }}
+      url: https://apps.ghpublic.pwrdrvr.com/${{ env.APP_NAME }}/${{ needs.build.outputs.packageVersion }}
 
     steps:
       - uses: actions/checkout@v2
@@ -143,6 +166,16 @@ jobs:
       - name: Install Node Modules
         run: npm ci
 
+      # Fixes errors due to JSII tsconfig.json not ignoring libs
+      # node_modules/flatpickr/dist/types/instance.d.ts(37,21): error TS2304: Cannot find name 'Node'.
+      # Error: node_modules/flatpickr/dist/types/instance.d.ts(82,56): error TS2304: Cannot find name 'HTMLElementTagNameMap'.
+      # Error: node_modules/@types/carbon-components-react/lib/components/FileUploader/FileUploaderDropContainer.d.ts(46,80): error TS2304: Cannot find name 'File'.
+      # Error: node_modules/@types/overlayscrollbars/index.d.ts(348,19): error TS2304: Cannot find name 'NodeListOf'.
+      - name: Modify cdk-construct tsconfig.json
+        run: |
+          mv ./packages/cdk-construct/tsconfig.json ./packages/cdk-construct/tsconfig.jsii.json
+          jq ".compilerOptions += { \"skipLibCheck\": true }" ./packages/cdk-construct/tsconfig.jsii.json > ./packages/cdk-construct/tsconfig.json
+
       - name: Build All TypeScript
         run: npm run build
 
@@ -151,6 +184,7 @@ jobs:
         with:
           name: app_zip
           path: packages/app/
+
       - name: Unzip Artifact - App
         working-directory: packages/app/
         run: unzip serverless_nextjs.zip
@@ -171,7 +205,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-session-name: microapps-app-nextjs-demo-build
+          role-session-name: microapps-app-${{ env.APP_NAME }}-build
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/builder-writeRole
           aws-region: ${{ env.AWS_REGION }}
 
@@ -180,9 +214,8 @@ jobs:
           npx microapps-publish preflight -a ${APP_NAME} -n ${PACKAGE_VERSION} -d ${DEPLOYER_LAMBDA_NAME} --overwrite
 
       - name: Deploy CDK Stack - App
-        run: npx cdk deploy ${CDK_CONTEXT_ARGS} --hotswap --require-approval never app
+        run: npx cdk deploy ${CDK_CONTEXT_ARGS} ${HOTSWAP_FLAG} --require-approval never app
 
       - name: Publish to MicroApps - App
         run: |
-          npx microapps-publish publish -a ${APP_NAME} -n ${PACKAGE_VERSION} -d ${DEPLOYER_LAMBDA_NAME} -l microapps-app-${APP_NAME}-${ENV}-pr-${PR_NUMBER} -s packages/app/.static_files/assets/${APP_NAME}/${PACKAGE_VERSION} --overwrite --noCache
-
+          npx microapps-publish publish -a ${APP_NAME} -n ${PACKAGE_VERSION} -d ${DEPLOYER_LAMBDA_NAME} -l microapps-app-${APP_NAME}-${ENV}${{ needs.build.outputs.prSuffix }} -s packages/app/.static_files/assets/${APP_NAME}/${PACKAGE_VERSION} --overwrite --noCache
