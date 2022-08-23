@@ -6,14 +6,18 @@ https://github.com/serverless-nextjs/serverless-next.js/tree/master/packages/ser
 # Development
 
 - `nvm use`
+- For Mac
+  - Install Xcode
+  - `xcode-select --install`
+  - `brew install vips`
 - `npm i`
 - `npm run dev`
 - Open in browser: `http://localhost:3000/nextjs-demo/0.0.0`
 
-# Publish New Version of Microapp
 
-- `aws-vault exec [profile] -- /bin/bash -l`
-- `npx microapps-publish --newversion 0.0.7`
+# Publish New Version of Microapp
+#
+See GitHub Actions workflows for example commands.
 
 ## Testing Locally with AWS SAM CLI
 
