@@ -1,6 +1,6 @@
 {
   "name": "@pwrdrvr/microapps-app-nextjs-demo-cdk",
-  "description": "NextJS Demo app deployed to the MicroApps framework",
+  "description": "Release app for the MicroApps framework, by PwrDrvr LLC. Provides the ability to control which version of an app is launched.",
   "version": "0.0.0",
   "repository": {
     "type": "git",
@@ -10,7 +10,7 @@
     "url": "https://github.com/pwrdrvr/serverless-nextjs-demo/issues"
   },
   "engine": {
-    "node": ">= 12.0.0"
+    "node": ">= 14.0.0"
   },
   "keywords": [
     "awscdk",
@@ -24,6 +24,22 @@
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "API.md",
+    "README.md",
+    "lib/*.js",
+    "lib/*.d.ts",
+    "lib/microapps-app-nextjs-demo/.next/*",
+    "lib/microapps-app-nextjs-demo/.static_files/*",
+    "lib/microapps-app-nextjs-demo/node_modules/*",
+    "lib/microapps-app-nextjs-demo/index.mjs",
+    "lib/microapps-app-nextjs-demo/index.mjs.map",
+    "lib/microapps-app-nextjs-demo/next.config.js",
+    "package.json",
+    "index.js*",
+    "package.json"
+  ],
+  "stability": "stable",
   "scripts": {
     "build": "tsc --build tsconfig.json",
     "build:jsii-all": "npm run build:jsii && npm run build:jsii-docgen && npm run build:jsii-pacmak",
@@ -35,12 +51,11 @@
     "cdk": "cdk"
   },
   "devDependencies": {
-    "@aws-cdk/assert": "^2.8.0",
+    "aws-cdk-lib": "2.8.0",
+    "constructs": "10.0.5",
     "@types/jest": "^26.0.10",
     "@types/node": "^12.0.0",
     "@types/source-map-support": "^0.5.3",
-    "aws-cdk-lib": "^2.8.0",
-    "constructs": "10.0.5",
     "jsii": "^1.52.1",
     "jsii-diff": "^1.52.1",
     "jsii-docgen": "^2.0.7",
