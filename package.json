@@ -22,7 +22,8 @@
     "dev": "NODE_CONFIG_ENV=${NODE_CONFIG_ENV:-dev} npm -w @pwrdrvr/microapps-app-nextjs-demo run dev",
     "lint": "eslint ./packages/ --ext .ts --ext .tsx",
     "lint-and-fix": "eslint ./packages/ --ext .ts --ext .tsx --fix",
-    "start:app:next": "NODE_ENV=${NODE_ENV:-production} NODE_CONFIG_ENV=${NODE_CONFIG_ENV:-dev} npm -w @pwrdrvr/microapps-app-nextjs-demo run start"
+    "start:app:next": "NODE_ENV=${NODE_ENV:-production} NODE_CONFIG_ENV=${NODE_CONFIG_ENV:-dev} npm -w @pwrdrvr/microapps-app-nextjs-demo run start",
+    "install:node-prune": "curl -sf https://gobinaries.com/tj/node-prune | sh"
   },
   "dependencies": {},
   "devDependencies": {
