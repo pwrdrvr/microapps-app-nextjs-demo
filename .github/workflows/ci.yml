@@ -30,7 +30,7 @@ jobs:
       prSuffix: ${{ steps.prSuffix.outputs.prSuffix }}
       packageVersion: ${{ steps.packageVersion.outputs.packageVersion }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Compute PR Suffix
         id: prSuffix
@@ -67,7 +67,7 @@ jobs:
           fi
 
       - name: Use Node.js 16
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: 'npm'
@@ -106,7 +106,7 @@ jobs:
       - name: Create version.txt
         run: echo ${PACKAGE_VERSION} > version.txt
       - name: Upload version.txt
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: version-txt
           path: version.txt
@@ -134,7 +134,7 @@ jobs:
         working-directory: packages/app/
         run: zip -r serverless_nextjs.zip .serverless_nextjs
       - name: Upload Zip
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: app_zip
           path: packages/app/serverless_nextjs.zip
@@ -154,10 +154,10 @@ jobs:
       url: https://apps.ghpublic.pwrdrvr.com/${{ env.APP_NAME }}/${{ needs.build.outputs.packageVersion }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Use Node.js 16
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: 'npm'
@@ -180,7 +180,7 @@ jobs:
         run: npm run build
 
       - name: Download Artifact - App
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: app_zip
           path: packages/app/
@@ -197,7 +197,7 @@ jobs:
           mv .serverless_nextjs/assets .static_files
 
       - name: Download Artifact - Version.txt
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: version-txt
       - run: echo PACKAGE_VERSION=$(cat version.txt) >> $GITHUB_ENV
