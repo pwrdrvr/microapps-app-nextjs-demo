@@ -104,4 +104,4 @@ jobs:
           git diff --ignore-space-at-eol --exit-code
 
     container:
-      image: jsii/superchain
+      image: jsii/superchain:1-buster-slim-node16
