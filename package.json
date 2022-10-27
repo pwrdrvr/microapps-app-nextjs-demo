@@ -10,9 +10,7 @@
   "license": "MIT",
   "homepage": "https://github.com/pwrdrvr/serverless-nextjs-demo#readme",
   "workspaces": [
-    "packages/app",
-    "packages/cdk-construct",
-    "packages/cdk-stack"
+    "packages/*"
   ],
   "scripts": {
     "build": "tsc --build tsconfig.json",
@@ -31,7 +29,7 @@
     "@pwrdrvr/microapps-publish": "^0.3.0-alpha.1",
     "@typescript-eslint/eslint-plugin": "^4.15.2",
     "@typescript-eslint/parser": "^4.15.2",
-    "aws-cdk": "^1.135.0",
+    "aws-cdk": "^2.8.0",
     "eslint": "^7.20.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^3.3.1",

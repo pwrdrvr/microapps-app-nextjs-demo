@@ -24,7 +24,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "stability": "experimental",
   "scripts": {
     "build": "tsc --build tsconfig.json",
     "build:jsii-all": "npm run build:jsii && npm run build:jsii-docgen && npm run build:jsii-pacmak",
@@ -36,11 +35,12 @@
     "cdk": "cdk"
   },
   "devDependencies": {
-    "aws-cdk-lib": "2.8.0",
-    "constructs": "10.0.5",
+    "@aws-cdk/assert": "^2.8.0",
     "@types/jest": "^26.0.10",
     "@types/node": "^12.0.0",
     "@types/source-map-support": "^0.5.3",
+    "aws-cdk-lib": "^2.8.0",
+    "constructs": "10.0.5",
     "jsii": "^1.52.1",
     "jsii-diff": "^1.52.1",
     "jsii-docgen": "^2.0.7",
