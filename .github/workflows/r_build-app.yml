@@ -138,7 +138,8 @@ jobs:
         working-directory: packages/cdk-construct/lib/
         run: |
           mkdir -p ${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}/.static_files/_next/
-          mv ${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}/.next/static ${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}/.static_files/_next/
+          mv ${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}/.next/static ${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}/.static_files/_next
+          cp -R ${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}/public/* ${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}/.static_files/
 
       - name: Build the NPM tarball for Examination
         working-directory: packages/cdk-construct/
