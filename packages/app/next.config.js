@@ -55,7 +55,7 @@ module.exports = {
       },
       {
         /** Images */
-        source: `${BASE_VERSION_ONLY}/images/:query*`,
+        source: `${BASE_VERSION_ONLY}/image/:query*`,
         destination: `/_next/image/:query*`
       },
       /** Api Calls */
