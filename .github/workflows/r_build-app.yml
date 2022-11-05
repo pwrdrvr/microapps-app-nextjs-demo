@@ -1,0 +1,163 @@
+
+name: Build App
+
+on:
+  workflow_call:
+    inputs:
+      APP_NAME:
+        required: true
+        type: string
+      APP_PACKAGE_NAME:
+        required: true
+        type: string
+      APP_CONSTRUCT_FOLDER_NAME:
+        required: true
+        type: string
+      packageVersion:
+        required: true
+        type: string
+      prSuffix:
+        required: false
+        type: string
+        default: ''
+
+env:
+  APP_NAME: ${{ inputs.APP_NAME }}
+  APP_PACKAGE_NAME: ${{ inputs.APP_PACKAGE_NAME }}
+  PR_NUMBER: ${{ github.event.pull_request.number }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+
+      # https://www.jonathan-wilkinson.com/github-actions-cache-everything
+      - name: Cache Node Modules
+        id: cache-node-modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+          key: node-modules-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install Dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Link to node_modules - App
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        working-directory: packages/app/node_modules/.bin
+        run: |
+          ln -s ../../../../node_modules/.bin/next
+
+      - name: Install Node-Prune
+        run: npm run install:node-prune
+
+      - name: Restore Next.js Build Cache
+        uses: actions/cache@v3
+        with:
+          # See here for caching with `yarn` https://github.com/actions/cache/blob/main/examples.md#node---yarn or you can leverage caching with actions/setup-node https://github.com/actions/setup-node
+          path: |
+            ${{ github.workspace }}/packages/app/.next/cache
+          # Generate a new cache whenever packages or source files change.
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          # If source files changed but packages didn't, rebuild from a prior cache.
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+
+      # Fixes errors due to JSII tsconfig.json not ignoring libs
+      # node_modules/flatpickr/dist/types/instance.d.ts(37,21): error TS2304: Cannot find name 'Node'.
+      # Error: node_modules/flatpickr/dist/types/instance.d.ts(82,56): error TS2304: Cannot find name 'HTMLElementTagNameMap'.
+      # Error: node_modules/@types/carbon-components-react/lib/components/FileUploader/FileUploaderDropContainer.d.ts(46,80): error TS2304: Cannot find name 'File'.
+      # Error: node_modules/@types/overlayscrollbars/index.d.ts(348,19): error TS2304: Cannot find name 'NodeListOf'.
+      - name: Modify cdk-construct tsconfig.json
+        run: |
+          mv ./packages/cdk-construct/tsconfig.json ./packages/cdk-construct/tsconfig.jsii.json
+          jq ".compilerOptions += { \"skipLibCheck\": true }" ./packages/cdk-construct/tsconfig.jsii.json > ./packages/cdk-construct/tsconfig.json
+
+      - name: Build All TypeScript
+        run: npm run build
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Dump info from version reusable workflow
+        run: |
+          echo "packageVersion: ${{ inputs.packageVersion }}"
+          echo "prSuffix: ${{ inputs.prSuffix }}"
+      
+      - name: Apply NPM Version to Everything
+        run: |
+          npm version ${{ inputs.packageVersion }} \
+            --no-git-tag-version --allow-same-version
+          npm version ${{ inputs.packageVersion }} \
+            --no-git-tag-version --allow-same-version --workspaces
+
+      - name: Apply Next.js Version
+        run: |
+          npx -w ${APP_PACKAGE_NAME} microapps-publish nextjs-version -n ${{ inputs.packageVersion }}
+
+      - name: Build Next.js App
+        run: |
+          npm run build:next
+
+      - name: Build Entry for App
+        run: |
+          npm run build:entry
+
+      - name: Install Runtime Deps for Rollup
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        working-directory: packages/app-entry/runtime-deps/
+        run: |
+          npm ci --omit=dev
+
+      - name: Remove Extraneous Files from Runtime Deps
+        working-directory: packages/app-entry/runtime-deps/
+        run: |
+          node-prune
+
+      - name: Combine Build Outputs
+        run: |
+          mkdir -p ./packages/cdk-construct/lib/${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}
+          mkdir -p ${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}/.static_files/
+          cp -R ./packages/app/public/* ${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}/.static_files/
+          cp -R ./packages/app/.next ./packages/cdk-construct/lib/${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}
+          rm -rf ./packages/cdk-construct/lib/${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}/.next/cache
+          cp -R ./packages/app/next.config.js ./packages/cdk-construct/lib/${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}
+          cp -R ./packages/app-entry/runtime-deps/node_modules ./packages/cdk-construct/lib/${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}
+          cp -R ./packages/app-entry/runtime-deps/font-manifest.json ./packages/cdk-construct/lib/${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}/.next/serverless/
+
+      # Prevent the static files from getting pulled into the Lambda
+      - name: Remove Static Files from App Build
+        working-directory: packages/cdk-construct/lib/
+        run: |
+          mkdir -p ${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}/.static_files/_next/
+          mv ${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}/.next/static ${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}/.static_files/_next
+
+      - name: Build the NPM tarball for Examination
+        working-directory: packages/cdk-construct/
+        run: |
+          npm pack
+      - name: Upload NPM tarball
+        uses: actions/upload-artifact@v3
+        with:
+          name: cdk_npm_package
+          path: packages/cdk-construct/pwrdrvr-microapps-app-${{ env.APP_NAME }}-cdk-${{ inputs.packageVersion }}.tgz
+
+      # Upload Artifact
+      - name: Zip Package
+        working-directory: packages/cdk-construct/lib/
+        run: zip -r nextjs.zip microapps-app-${APP_NAME}
+      - name: Upload Zip
+        uses: actions/upload-artifact@v3
+        with:
+          name: app_zip
+          path: packages/cdk-construct/lib/nextjs.zip

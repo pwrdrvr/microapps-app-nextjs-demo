@@ -34,11 +34,6 @@ export default class SharedProps {
     return this._stackName;
   }
 
-  private _s3BucketName = 'microapps';
-  public get s3BucketName(): string {
-    return this._s3BucketName;
-  }
-
   private _account;
   public get account(): string {
     return this._account;
@@ -50,7 +45,6 @@ export default class SharedProps {
   }
 
   constructor(scope: Construct) {
-    this._s3BucketName = scope.node.tryGetContext('@pwrdrvr/microapps:s3BucketName') ?? 'microapps';
     this._account =
       scope.node.tryGetContext('@pwrdrvr/microapps:account') ?? process.env.CDK_DEFAULT_ACCOUNT;
     this._region =

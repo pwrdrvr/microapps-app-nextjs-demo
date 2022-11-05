@@ -34,6 +34,7 @@ export default function Layout({ children, home = undefined }) {
                 isProd ? '' : getConfig().publicRuntimeConfig.staticFolder,
                 '/images/profile.jpg',
               )}`}
+              unoptimized
               className={utilStyles.borderCircle}
               height={144}
               width={144}

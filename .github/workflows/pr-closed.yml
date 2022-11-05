@@ -9,20 +9,20 @@ on:
 
   workflow_dispatch:
 
-# Limit concurrency to 1, with queueing, per workflow
-# Limit concurrency to 1, with queueing, per workflow per PR
-concurrency:
-  group: build-${{ github.workflow }}-${{ github.event.pull_request.number }}
-  cancel-in-progress: false
+
 env:
   PR_NUMBER: ${{ github.event.pull_request.number }}
   NODE_ENV: prod
   APP_NAME: nextjs-demo
+  APP_NAME_STORYBOOK: nextjs-demo-storybook
   DEPLOYER_LAMBDA_NAME: microapps-core-ghpublic-deployer-prod
   AWS_REGION: us-east-2
 
 jobs:
   cleanup-pr:
+    concurrency:
+      group: pr-closed-${{ github.workflow }}-${{ github.event.pull_request.number }}
+      cancel-in-progress: false
     environment:
       name: ghpublic
     permissions:
@@ -30,10 +30,10 @@ jobs:
       id-token: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Use Node.js 16
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16
 
@@ -60,6 +60,7 @@ jobs:
       - name: Delete App from MicroApps
         run: |
           npx microapps-publish delete -a ${APP_NAME} -n ${PACKAGE_VERSION} -d ${DEPLOYER_LAMBDA_NAME}
+          npx microapps-publish delete -a ${APP_NAME_STORYBOOK} -n ${PACKAGE_VERSION} -d ${DEPLOYER_LAMBDA_NAME}
 
       - name: Destroy CDK Stack
         run: |
