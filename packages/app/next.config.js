@@ -11,7 +11,9 @@ const BASE_PREFIX_APP_WITH_VERSION = `${BASE_PREFIX_APP}${BASE_VERSION_ONLY}`;
 
 // eslint-disable-next-line no-undef
 module.exports = {
-  target: 'serverless',
+  // TODO switch to https://nextjs.org/docs/advanced-features/output-file-tracing
+  // target: 'serverless',
+  // output: 'standalone',
 
   // We want the app under the app name like /nextjs-demo
   basePath: BASE_PREFIX_APP,
