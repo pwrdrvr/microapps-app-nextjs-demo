@@ -1,12 +1,12 @@
 {
-  "name": "@pwrdrvr/microapps-app-release-entry",
+  "name": "@pwrdrvr/microapps-app-nextjs-demo-entry",
   "description": "Express loader for Next.js apps",
   "version": "1.0.0",
   "private": true,
   "main": "dist/index.js",
   "type": "commonjs",
   "repository": {
-    "url": "https://github.com/pwrdrvr/microapps-app-release-entry.git"
+    "url": "https://github.com/pwrdrvr/serverless-nextjs-demo.git"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.77",
