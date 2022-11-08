@@ -45,7 +45,6 @@ export default function Layout({ children, home = undefined }) {
         ) : (
           <>
             <Link href="/">
-
               <Image
                 priority
                 src={`${path.join(
@@ -57,7 +56,6 @@ export default function Layout({ children, home = undefined }) {
                 width={108}
                 alt={name}
               />
-
             </Link>
             <h2 className={utilStyles.headingLg}>
               <Link href="/" className={utilStyles.colorInherit}>
@@ -70,9 +68,7 @@ export default function Layout({ children, home = undefined }) {
       <main>{children}</main>
       {!home && (
         <div className={styles.backToHome}>
-          <Link href="/">
-            ← Back to home
-          </Link>
+          <Link href="/">← Back to home</Link>
         </div>
       )}
     </div>
