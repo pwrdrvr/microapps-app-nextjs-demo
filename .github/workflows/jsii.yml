@@ -40,10 +40,20 @@ jobs:
       # - name: Move root NPM modules out of the way
       #   run: mv node_modules node_modules_hide
 
+      - name: JSII Version Before npm ci
+        working-directory: packages/cdk-construct/
+        run: |
+          npx jsii --version || true
+
       - name: Install CDK Construct Deps
         working-directory: packages/cdk-construct/
         run: |
           npm ci
+
+      - name: JSII Version After npm ci
+        working-directory: packages/cdk-construct/
+        run: |
+          npx jsii --version || true
 
       - name: Build with JSII
         working-directory: packages/cdk-construct/
