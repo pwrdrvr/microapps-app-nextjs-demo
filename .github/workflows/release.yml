@@ -7,8 +7,8 @@ name: Release Package
 
 on:
   # Pull Request - Only when testing workflow
-  pull_request:
-    branches: [ main ]
+  # pull_request:
+  #   branches: [ main ]
   release:
     types: [published]
 
@@ -109,6 +109,7 @@ jobs:
         run: |
           mv package-lock.json package-lock.json_hide
           mv package.json package.json_hide
+          rm -rf node_modules
 
       - name: Install CDK Construct Deps
         working-directory: packages/cdk-construct/
