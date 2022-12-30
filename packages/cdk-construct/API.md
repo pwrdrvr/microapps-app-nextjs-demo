@@ -6,9 +6,7 @@
 
 - *Implements:* [`@pwrdrvr/microapps-app-nextjs-demo-cdk.IMicroAppsAppNextjsDemo`](#@pwrdrvr/microapps-app-nextjs-demo-cdk.IMicroAppsAppNextjsDemo)
 
-NextJS Demo app for MicroApps framework.
-
-> {@link https://nextjs.org/learn/basics/create-nextjs-app | Create NextJS App }
+MicroApps Next.js demo app.
 
 #### Initializer <a name="@pwrdrvr/microapps-app-nextjs-demo-cdk.MicroAppsAppNextjsDemo.Initializer"></a>
 
@@ -63,16 +61,6 @@ import { MicroAppsAppNextjsDemoProps } from '@pwrdrvr/microapps-app-nextjs-demo-
 const microAppsAppNextjsDemoProps: MicroAppsAppNextjsDemoProps = { ... }
 ```
 
-##### `staticAssetsS3Bucket`<sup>Required</sup> <a name="@pwrdrvr/microapps-app-nextjs-demo-cdk.MicroAppsAppNextjsDemoProps.staticAssetsS3Bucket"></a>
-
-- *Type:* [`aws-cdk-lib.aws_s3.IBucket`](#aws-cdk-lib.aws_s3.IBucket)
-
-Bucket with the static assets of the app.
-
-Next.js apps need access to the static assets bucket.
-
----
-
 ##### `functionName`<sup>Optional</sup> <a name="@pwrdrvr/microapps-app-nextjs-demo-cdk.MicroAppsAppNextjsDemoProps.functionName"></a>
 
 - *Type:* `string`
@@ -101,14 +89,6 @@ Removal Policy to pass to assets (e.g. Lambda function).
 
 ---
 
-##### `sharpLayer`<sup>Optional</sup> <a name="@pwrdrvr/microapps-app-nextjs-demo-cdk.MicroAppsAppNextjsDemoProps.sharpLayer"></a>
-
-- *Type:* [`aws-cdk-lib.aws_lambda.ILayerVersion`](#aws-cdk-lib.aws_lambda.ILayerVersion)
-
-`sharp` node module Lambda Layer for Next.js image adjustments.
-
----
-
 
 ## Protocols <a name="Protocols"></a>
 
@@ -116,7 +96,7 @@ Removal Policy to pass to assets (e.g. Lambda function).
 
 - *Implemented By:* [`@pwrdrvr/microapps-app-nextjs-demo-cdk.MicroAppsAppNextjsDemo`](#@pwrdrvr/microapps-app-nextjs-demo-cdk.MicroAppsAppNextjsDemo), [`@pwrdrvr/microapps-app-nextjs-demo-cdk.IMicroAppsAppNextjsDemo`](#@pwrdrvr/microapps-app-nextjs-demo-cdk.IMicroAppsAppNextjsDemo)
 
-Represents a NextJS Demo app.
+Represents an app.
 
 
 #### Properties <a name="Properties"></a>
