@@ -37,8 +37,8 @@ jobs:
       #
 
       # JSII does not work well with monorepos
-      # - name: Move root NPM modules out of the way
-      #   run: mv node_modules node_modules_hide
+      - name: Move root NPM modules out of the way
+        run: mv node_modules node_modules_hide
 
       - name: Install CDK Construct Deps
         working-directory: packages/cdk-construct/
@@ -54,6 +54,10 @@ jobs:
         working-directory: packages/cdk-construct/
         run: |
           git diff --ignore-space-at-eol --exit-code
+
+      # JSII does not work well with monorepos
+      - name: Move root NPM modules back
+        run: mv node_modules_hide node_modules
 
     container:
       image: jsii/superchain:1-buster-slim-node16
