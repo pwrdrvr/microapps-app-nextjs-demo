@@ -3,7 +3,6 @@ import Image from 'next/image';
 import styles from './layout.module.css';
 import utilStyles from '../styles/utils.module.css';
 import Link from 'next/link';
-import path from 'path';
 import getConfig from 'next/config';
 
 const name = 'PwrDrvr';
@@ -11,10 +10,12 @@ export const siteTitle = 'PwrDrvr Website - 2';
 const isProd = process.env.NODE_ENV === 'production';
 
 export default function Layout({ children, home = undefined }) {
+  const base = getConfig().publicRuntimeConfig.staticFolder;
+
   return (
     <div className={styles.container}>
       <Head>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href={`${isProd ? '' : base}/favicon.ico`} />
         <meta name="description" content="Learn how to build a personal website using Next.js" />
         <meta
           property="og:image"
@@ -30,10 +31,7 @@ export default function Layout({ children, home = undefined }) {
           <>
             <Image
               priority
-              src={`${path.join(
-                isProd ? '' : getConfig().publicRuntimeConfig.staticFolder,
-                '/images/profile.jpg',
-              )}`}
+              src={`${isProd ? '' : base}/images/profile.jpg`}
               unoptimized
               className={utilStyles.borderCircle}
               height={144}
@@ -47,10 +45,8 @@ export default function Layout({ children, home = undefined }) {
             <Link href="/">
               <Image
                 priority
-                src={`${path.join(
-                  isProd ? '' : getConfig().publicRuntimeConfig.staticFolder,
-                  '/images/profile.jpg',
-                )}`}
+                src={`${isProd ? '' : base}/images/profile.jpg`}
+                unoptimized
                 className={utilStyles.borderCircle}
                 height={108}
                 width={108}
