@@ -31,7 +31,7 @@ export default function Layout({ children, home = undefined }) {
           <>
             <Image
               priority
-              src={`${isProd ? '' : base}/images/profile.jpg`}
+              src={`${isProd ? base : ''}/images/profile.jpg`}
               unoptimized
               className={utilStyles.borderCircle}
               height={144}
@@ -45,7 +45,7 @@ export default function Layout({ children, home = undefined }) {
             <Link href="/">
               <Image
                 priority
-                src={`${isProd ? '' : base}/images/profile.jpg`}
+                src={`${isProd ? base : ''}/images/profile.jpg`}
                 unoptimized
                 className={utilStyles.borderCircle}
                 height={108}
