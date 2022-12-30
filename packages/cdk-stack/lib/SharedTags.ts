@@ -12,7 +12,7 @@ export default class SharedTags {
     // MicroApp Deployer Lambda function
     Tags.of(construct).add('microapp-managed', 'true');
     Tags.of(construct).add('microapp-name', args.appName);
-    Tags.of(construct).add('repository', 'https://github.com/pwrdrvr/microapps-app-release/');
+    Tags.of(construct).add('repository', 'https://github.com/pwrdrvr/microapps-app-nextjs-demo/');
     Tags.of(construct).add('application', `microapps-app-${args.appName}`);
   }
 

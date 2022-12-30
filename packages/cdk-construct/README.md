@@ -1,4 +1,4 @@
-![Build/Deploy CI](https://github.com/pwrdrvr/microapps-app-release/actions/workflows/ci.yml/badge.svg) ![Main Build](https://github.com/pwrdrvr/microapps-app-release/actions/workflows/main-build.yml/badge.svg) ![Deploy](https://github.com/pwrdrvr/microapps-app-release/actions/workflows/deploy.yml/badge.svg)
+![Build/Deploy CI](https://github.com/pwrdrvr/microapps-app-nextjs-demo/actions/workflows/ci.yml/badge.svg) ![Main Build](https://github.com/pwrdrvr/microapps-app-nextjs-demo/actions/workflows/main-build.yml/badge.svg) ![Deploy](https://github.com/pwrdrvr/microapps-app-nextjs-demo/actions/workflows/deploy.yml/badge.svg)
 
 # Overview
 
