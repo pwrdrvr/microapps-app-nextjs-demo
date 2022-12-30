@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { GetStaticPropsResult } from 'next';
 import Layout, { siteTitle } from '../components/layout';
 import utilStyles from '../styles/utils.module.css';
 import { getSortedPostsData } from '../lib/posts';
@@ -12,7 +13,9 @@ import Date from '../components/date';
 // Dev: Runs on every page load
 // Prod: Runs on build
 //
-export async function getStaticProps() {
+export async function getStaticProps(): Promise<
+  GetStaticPropsResult<{ allPostsData: ReturnType<typeof getSortedPostsData> }>
+> {
   const allPostsData = getSortedPostsData();
   return {
     props: {
