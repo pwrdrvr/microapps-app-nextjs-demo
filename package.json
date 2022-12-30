@@ -1,14 +1,14 @@
 {
-  "name": "@pwrdrvr/serverless-nextjs-demo-workspace",
+  "name": "@pwrdrvr/microapps-app-nextjs-demo-workspace",
   "version": "0.0.0",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pwrdrvr/serverless-nextjs-demo.git"
+    "url": "git+https://github.com/pwrdrvr/microapps-app-nextjs-demo.git"
   },
   "author": "PwrDrvr LLC",
   "license": "MIT",
-  "homepage": "https://github.com/pwrdrvr/serverless-nextjs-demo#readme",
+  "homepage": "https://github.com/pwrdrvr/microapps-app-nextjs-demo#readme",
   "workspaces": [
     "packages/*"
   ],
@@ -30,7 +30,7 @@
     "install:node-prune": "curl -sf https://gobinaries.com/tj/node-prune | sh"
   },
   "devDependencies": {
-    "@pwrdrvr/microapps-publish": "^0.3.0-alpha.3",
+    "@pwrdrvr/microapps-publish": "^0.3.1",
     "@rollup/plugin-commonjs": "^23.0.0",
     "@rollup/plugin-json": "^5.0.0",
     "@rollup/plugin-node-resolve": "^15.0.0",

@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pwrdrvr/serverless-nextjs-demo"
+    "url": "https://github.com/pwrdrvr/microapps-app-nextjs-demo"
   },
   "bugs": {
-    "url": "https://github.com/pwrdrvr/serverless-nextjs-demo/issues"
+    "url": "https://github.com/pwrdrvr/microapps-app-nextjs-demo/issues"
   },
   "engine": {
     "node": ">= 14.0.0"

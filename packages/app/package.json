@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pwrdrvr/serverless-nextjs-demo.git"
+    "url": "git+https://github.com/pwrdrvr/microapps-app-nextjs-demo.git"
   },
   "author": "PwrDrvr LLC",
   "license": "MIT",
-  "homepage": "https://github.com/pwrdrvr/serverless-nextjs-demo#readme",
+  "homepage": "https://github.com/pwrdrvr/microapps-app-nextjs-demo#readme",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -26,7 +26,7 @@
     "sharp": "^0.26.3"
   },
   "devDependencies": {
-    "@pwrdrvr/microapps-publish": "^0.3.0-alpha.3",
+    "@pwrdrvr/microapps-publish": "^0.3.1",
     "@pwrdrvr/serverless-nextjs-router": "^0.0.4",
     "@types/node": "^14.14.25",
     "@types/react": "^18.0.0",

@@ -4,7 +4,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pwrdrvr/serverless-nextjs-demo.git"
+    "url": "git+https://github.com/pwrdrvr/microapps-app-nextjs-demo.git"
   },
   "author": "PwrDrvr LLC",
   "license": "MIT",
