@@ -5,7 +5,7 @@
 // next-images
 // const withImages = require('next-images')
 
-const BASE_PREFIX_APP = '/nextjs-demo';
+const BASE_PREFIX_APP = '/prefix/nextjs-demo';
 const BASE_VERSION_ONLY = '/0.0.0'
 const BASE_PREFIX_APP_WITH_VERSION = `${BASE_PREFIX_APP}${BASE_VERSION_ONLY}`;
 
@@ -56,9 +56,23 @@ module.exports = {
         destination: `/_next/:path*`
       },
       {
-        /** Images */
-        source: `${BASE_VERSION_ONLY}/image/:query*`,
+        /** Image optimizer (not tested yet) */
+        source: `${BASE_VERSION_ONLY}/_next/image/:query*`,
         destination: `/_next/image/:query*`
+      },
+      {
+        // Images
+        // Only used for local development
+        // On deployed environments, the images are served from S3
+        // and image requests will never reach this rewrite
+        source: `${BASE_VERSION_ONLY}/images/:query*`,
+        destination: `/images/:query*`
+      },
+      {
+        // Favicon
+        // Only used for local development
+        source: `${BASE_VERSION_ONLY}/favicon.ico`,
+        destination: `/favicon.ico`
       },
       /** Api Calls */
       {

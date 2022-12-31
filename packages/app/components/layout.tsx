@@ -7,7 +7,6 @@ import getConfig from 'next/config';
 
 const name = 'PwrDrvr';
 export const siteTitle = 'PwrDrvr Website - 2';
-const isProd = process.env.NODE_ENV === 'production';
 
 export default function Layout({ children, home = undefined }) {
   const base = getConfig().publicRuntimeConfig.staticFolder;
@@ -15,7 +14,7 @@ export default function Layout({ children, home = undefined }) {
   return (
     <div className={styles.container}>
       <Head>
-        <link rel="icon" href={`${isProd ? base : ''}/favicon.ico`} />
+        <link rel="icon" href={`${base}/favicon.ico`} />
         <meta name="description" content="Learn how to build a personal website using Next.js" />
         <meta
           property="og:image"
@@ -31,7 +30,7 @@ export default function Layout({ children, home = undefined }) {
           <>
             <Image
               priority
-              src={`${isProd ? base : ''}/images/profile.jpg`}
+              src={`${base}/images/profile.jpg`}
               unoptimized
               className={utilStyles.borderCircle}
               height={144}
@@ -45,7 +44,7 @@ export default function Layout({ children, home = undefined }) {
             <Link href="/">
               <Image
                 priority
-                src={`${isProd ? base : ''}/images/profile.jpg`}
+                src={`${base}/images/profile.jpg`}
                 unoptimized
                 className={utilStyles.borderCircle}
                 height={108}
