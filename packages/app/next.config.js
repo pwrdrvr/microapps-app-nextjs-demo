@@ -56,9 +56,23 @@ module.exports = {
         destination: `/_next/:path*`
       },
       {
-        /** Images */
-        source: `${BASE_VERSION_ONLY}/image/:query*`,
+        /** Image optimizer (not tested yet) */
+        source: `${BASE_VERSION_ONLY}/_next/image/:query*`,
         destination: `/_next/image/:query*`
+      },
+      {
+        // Images
+        // Only used for local development
+        // On deployed environments, the images are served from S3
+        // and image requests will never reach this rewrite
+        source: `${BASE_VERSION_ONLY}/images/:query*`,
+        destination: `/images/:query*`
+      },
+      {
+        // Favicon
+        // Only used for local development
+        source: `${BASE_VERSION_ONLY}/favicon.ico`,
+        destination: `/favicon.ico`
       },
       /** Api Calls */
       {
