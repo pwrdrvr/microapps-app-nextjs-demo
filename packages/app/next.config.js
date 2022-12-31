@@ -5,7 +5,7 @@
 // next-images
 // const withImages = require('next-images')
 
-const BASE_PREFIX_APP = '/prefix/nextjs-demo';
+const BASE_PREFIX_APP = '/nextjs-demo';
 const BASE_VERSION_ONLY = '/0.0.0'
 const BASE_PREFIX_APP_WITH_VERSION = `${BASE_PREFIX_APP}${BASE_VERSION_ONLY}`;
 
