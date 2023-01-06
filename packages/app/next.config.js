@@ -4,9 +4,10 @@
 // const withPlugins = require('next-compose-plugins');
 // next-images
 // const withImages = require('next-images')
+const isProd = process.env.NODE_ENV === 'production';
 
 const BASE_PREFIX_APP = '/nextjs-demo';
-const BASE_VERSION_ONLY = '/0.0.0'
+const BASE_VERSION_ONLY = '/0.0.0';
 const BASE_PREFIX_APP_WITH_VERSION = `${BASE_PREFIX_APP}${BASE_VERSION_ONLY}`;
 
 // eslint-disable-next-line no-undef
@@ -22,26 +23,13 @@ module.exports = {
   // to have /nextjs-demo/0.0.0/ as the prefix so they route cleanly
   // to an isolated folder on the S3 bucket and to a specific
   // lambda URL without having to do any path manipulation
-  assetPrefix: BASE_PREFIX_APP_WITH_VERSION,
+  assetPrefix: isProd ? BASE_PREFIX_APP_WITH_VERSION : BASE_PREFIX_APP,
 
   // Get the _next/data calls rebased with the version
   // This requires custom Next.js routing in the Origin Request
   // Lambda function
   async generateBuildId() {
     return BASE_VERSION_ONLY.slice(1);
-  },
-
-  async redirects() {
-    return [
-      // assetPrefix breaks webpack-hmr, so we fix it here.
-      // See: https://github.com/vercel/next.js/issues/18080
-      // redirects is used because rewrites does not work for webpack-hmr
-      {
-        source: '/:any*/_next/webpack-hmr:path*',
-        destination: '/_next/webpack-hmr:path*',
-        permanent: false,
-      },
-    ];
   },
 
   // Strip the version out of the path
@@ -53,12 +41,12 @@ module.exports = {
       {
         /** Static Assets and getServerSideProps (_next/data/) */
         source: `${BASE_VERSION_ONLY}/_next/:path*`,
-        destination: `/_next/:path*`
+        destination: `/_next/:path*`,
       },
       {
         /** Image optimizer (not tested yet) */
         source: `${BASE_VERSION_ONLY}/_next/image/:query*`,
-        destination: `/_next/image/:query*`
+        destination: `/_next/image/:query*`,
       },
       {
         // Images
@@ -66,20 +54,20 @@ module.exports = {
         // On deployed environments, the images are served from S3
         // and image requests will never reach this rewrite
         source: `${BASE_VERSION_ONLY}/images/:query*`,
-        destination: `/images/:query*`
+        destination: `/images/:query*`,
       },
       {
         // Favicon
         // Only used for local development
         source: `${BASE_VERSION_ONLY}/favicon.ico`,
-        destination: `/favicon.ico`
+        destination: `/favicon.ico`,
       },
       /** Api Calls */
       {
         source: `${BASE_VERSION_ONLY}/api/:path*`,
-        destination: `/api/:path*`
-      }
-    ]
+        destination: `/api/:path*`,
+      },
+    ];
   },
 
   publicRuntimeConfig: {
