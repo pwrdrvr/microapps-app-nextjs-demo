@@ -13,7 +13,7 @@ This is the Release Console for the MicroApps framework.
   - `brew install vips`
 - `npm i`
 - `npm run dev`
-- Open in browser: `http://localhost:3000/nextjs-demo/0.0.0`
+- Open in browser: `http://localhost:3000/nextjs-demo`
 
 # Publish New Version of Microapp
 
