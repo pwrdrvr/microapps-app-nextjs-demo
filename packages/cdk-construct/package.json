@@ -67,10 +67,6 @@
     "aws-cdk-lib": "^2.8.0",
     "constructs": "^10.0.5"
   },
-  "dependencies": {
-    "aws-cdk-lib": "^2.8.0",
-    "constructs": "^10.0.5"
-  },
   "jsii": {
     "outdir": "dist",
     "targets": {
