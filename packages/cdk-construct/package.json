@@ -51,20 +51,19 @@
     "cdk": "cdk"
   },
   "devDependencies": {
-    "aws-cdk-lib": "2.8.0",
+    "aws-cdk-lib": "2.24.1",
     "constructs": "10.0.5",
-    "@types/jest": "^26.0.10",
-    "@types/node": "^12.0.0",
-    "@types/source-map-support": "^0.5.3",
+    "@types/node": "16.9.2",
+    "@types/source-map-support": "^0.5.6",
     "jsii": "^1.52.1",
     "jsii-diff": "^1.52.1",
     "jsii-docgen": "^2.0.7",
     "jsii-pacmak": "^1.52.1",
-    "source-map-support": "^0.5.16",
+    "source-map-support": "^0.5.21",
     "typescript": "^4.3.5"
   },
   "peerDependencies": {
-    "aws-cdk-lib": "^2.8.0",
+    "aws-cdk-lib": "^2.24.1",
     "constructs": "^10.0.5"
   },
   "jsii": {
