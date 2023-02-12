@@ -8,8 +8,14 @@ name: JSII Build
 on:
   push:
     branches: [ main ]
+    paths:
+      - '**'
+      - '!**/README.md'
   pull_request:
     branches: [ main ]
+    paths:
+      - '**'
+      - '!**/README.md'
 
 env:
   # This is used by the SharedProps to detect a PR build

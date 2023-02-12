@@ -9,7 +9,6 @@ on:
 
   workflow_dispatch:
 
-
 env:
   PR_NUMBER: ${{ github.event.pull_request.number }}
   NODE_ENV: prod
