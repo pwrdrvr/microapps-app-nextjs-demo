@@ -76,7 +76,7 @@ export class MicroAppsAppNextjsDemo extends Construct implements IMicroAppsAppNe
     //
     this._lambdaFunction = new lambda.Function(this, 'app-lambda', {
       code,
-      runtime: lambda.Runtime.NODEJS_14_X,
+      runtime: lambda.Runtime.NODEJS_16_X,
       handler: 'index.handler',
       functionName,
       environment: {
