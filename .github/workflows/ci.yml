@@ -10,10 +10,14 @@ on:
   # New versions are deployed with `deploy` build
   push:
     branches: [ main ]
+    paths:
+      - '**'
+      - '!**/README.md'
   pull_request:
     branches: [ main ]
-  # release:
-  #   types: [published]
+    paths:
+      - '**'
+      - '!**/README.md'
 
 env:
   # This is used by the SharedProps to detect a PR build
