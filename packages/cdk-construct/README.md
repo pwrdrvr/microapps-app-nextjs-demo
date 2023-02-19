@@ -6,6 +6,10 @@ This is the Release Console for the MicroApps framework.
 
 # Development
 
+- Install `pnpm`
+  - https://pnpm.io/installation
+  - `npm i -g pnpm`
+  - This is needed to prevent hoisting of deps in `packages/app/` which is needed so that `output: standalone` can see the deps and work correctly
 - `nvm use`
 - For Mac
   - Install Xcode

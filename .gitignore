@@ -11,6 +11,4 @@ storybook-static/
 dist
 *.tsbuildinfo
 storybook-static/
-.serverless_nextjs/
-.next/
-.serverless/
+back/

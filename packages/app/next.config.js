@@ -10,14 +10,20 @@ const BASE_PREFIX_APP = '/nextjs-demo';
 const BASE_VERSION_ONLY = '/0.0.0';
 const BASE_PREFIX_APP_WITH_VERSION = `${BASE_PREFIX_APP}${BASE_VERSION_ONLY}`;
 
-// const _crypto = require('crypto');
+const path = require('path');
 
 /**
  * @type {import('next').NextConfig}
  */
 module.exports = {
+  output: 'standalone',
+  outputFileTracing: true,
+
+  compress: false,
+
   experimental: {
-    bundleServerPackages: isProd,
+    bundleServerPackages: true,
+    outputFileTracingRoot: path.join(__dirname, '../../'),
   },
 
   // We want the app under the app name like /nextjs-demo
@@ -30,14 +36,22 @@ module.exports = {
 
   assetPrefix: isProd ? BASE_PREFIX_APP_WITH_VERSION : BASE_PREFIX_APP,
 
-  outputFileTracing: false,
 
   webpack: (config, options) => {
     const { dev, isServer } = options;
 
     if (isServer && config.name === 'server' && !dev) {
       // We don't need huge code on the server-side
-      config.optimization.minimize = true;
+      config.optimization.minimize = false;
+
+      // const origEntryFuncAsync = config.entry;
+      // config.entry = async () => {
+      //   const entries = await origEntryFuncAsync();
+      //   // const entry = './index.ts';
+      //   entries['index'] = './index.ts';
+
+      //   return entries;
+      // };
 
       // If some packages need to be forced external, do that here
       // config.externals.push({
