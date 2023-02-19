@@ -86,6 +86,8 @@ export class MicroAppsAppNextjsDemo extends Construct implements IMicroAppsAppNe
         AWS_XRAY_CONTEXT_MISSING: 'IGNORE_ERROR',
         AWS_LWA_ENABLE_COMPRESSION: 'true',
         AWS_LAMBDA_EXEC_WRAPPER: '/opt/bootstrap',
+        RUST_LOG: 'info',
+        PORT: '3000',
         READINESS_CHECK_PATH: '/nextjs-demo',
       },
       logRetention: logs.RetentionDays.ONE_MONTH,
