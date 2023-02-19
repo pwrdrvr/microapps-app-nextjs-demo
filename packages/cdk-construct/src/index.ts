@@ -63,7 +63,7 @@ export class MicroAppsAppNextjsDemo extends Construct implements IMicroAppsAppNe
 
     // Create Lambda Function
     let code: lambda.AssetCode;
-    if (existsSync(path.join(__dirname, 'microapps-app-nextjs-demo', 'server.js'))) {
+    if (existsSync(path.join(__dirname, 'microapps-app-nextjs-demo', 'server', 'server.js'))) {
       // This is for built apps packaged with the CDK construct
       code = lambda.Code.fromAsset(path.join(__dirname, 'microapps-app-nextjs-demo', 'server'));
     } else {
