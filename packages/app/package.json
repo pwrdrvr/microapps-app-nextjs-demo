@@ -10,15 +10,17 @@
   "homepage": "https://github.com/pwrdrvr/microapps-app-nextjs-demo#readme",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "NODE_ENV=production next build",
     "start": "next start",
     "lint": "eslint ./ --ext .ts --ext .tsx",
-    "lint-and-fix": "eslint ./ --ext .ts --ext .tsx --fix"
+    "lint-and-fix": "eslint ./ --ext .ts --ext .tsx --fix",
+    "postinstall": "patch-package --patch-dir patches || echo 'Skipping packages/app patches'"
   },
   "dependencies": {
     "date-fns": "^2.17.0",
     "gray-matter": "^4.0.2",
     "next": "13.1.1",
+    "patch-package": "6.4.7",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "remark": "^13.0.0",

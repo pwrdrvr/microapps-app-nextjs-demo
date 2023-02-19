@@ -16,6 +16,8 @@ const BASE_PREFIX_APP_WITH_VERSION = `${BASE_PREFIX_APP}${BASE_VERSION_ONLY}`;
  * @type {import('next').NextConfig}
  */
 module.exports = {
+  output: 'standalone',
+  outputFileTracing: isProd,
   experimental: {
     bundleServerPackages: isProd,
   },
@@ -29,8 +31,6 @@ module.exports = {
   // lambda URL without having to do any path manipulation
 
   assetPrefix: isProd ? BASE_PREFIX_APP_WITH_VERSION : BASE_PREFIX_APP,
-
-  outputFileTracing: false,
 
   webpack: (config, options) => {
     const { dev, isServer } = options;

@@ -78,7 +78,7 @@ jobs:
             node_modules
             packages/**/node_modules
             !node_modules/.cache
-          key: node-modules-${{ hashFiles('package.json', 'package-lock.json') }}
+          key: node-modules-${{ hashFiles('package.json', 'package-lock.json', 'patches/*') }}
 
       - name: Install Dependencies
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
