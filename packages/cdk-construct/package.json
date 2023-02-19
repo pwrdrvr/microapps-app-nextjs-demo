@@ -30,7 +30,7 @@
     "lib/*.js",
     "lib/*.d.ts",
     "lib/microapps-app-nextjs-demo/.next/*",
-    "lib/microapps-app-nextjs-demo/.static_files/*",
+    "lib/microapps-app-nextjs-demo/static_files/*",
     "lib/microapps-app-nextjs-demo/node_modules/*",
     "lib/microapps-app-nextjs-demo/index.mjs",
     "lib/microapps-app-nextjs-demo/index.mjs.map",
