@@ -1,5 +1,5 @@
 import { existsSync } from 'fs';
-import { Duration, RemovalPolicy } from 'aws-cdk-lib';
+import { Aws, Duration, RemovalPolicy } from 'aws-cdk-lib';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as logs from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
@@ -77,17 +77,29 @@ export class MicroAppsAppNextjsDemo extends Construct implements IMicroAppsAppNe
     this._lambdaFunction = new lambda.Function(this, 'app-lambda', {
       code,
       runtime: lambda.Runtime.NODEJS_16_X,
-      handler: 'index.handler',
+      handler: 'run.sh',
       functionName,
       environment: {
         AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
         NODE_ENV: 'production',
         NODE_CONFIG_ENV: nodeEnv,
         AWS_XRAY_CONTEXT_MISSING: 'IGNORE_ERROR',
+        AWS_LWA_ENABLE_COMPRESSION: 'true',
+        AWS_LAMBDA_EXEC_WRAPPER: '/opt/bootstrap',
+        READINESS_CHECK_PATH: '/nextjs-demo',
       },
       logRetention: logs.RetentionDays.ONE_MONTH,
       memorySize: 1769,
       timeout: Duration.seconds(15),
+      architecture: lambda.Architecture.ARM_64,
+      layers: [
+        lambda.LayerVersion.fromLayerVersionArn(
+          this,
+          'lwa-layer',
+          // 13 is 0.6.2 w/gzip support
+          `arn:aws:lambda:${Aws.REGION}:753240598075:layer:LambdaAdapterLayerArm64:13`,
+        ),
+      ],
     });
     if (removalPolicy !== undefined) {
       this._lambdaFunction.applyRemovalPolicy(removalPolicy);

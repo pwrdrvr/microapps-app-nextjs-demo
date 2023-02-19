@@ -121,7 +121,7 @@ jobs:
             !packages/app-entry/runtime-deps/node_modules/.cache
           key: node-modules-${{ hashFiles('packages/app-entry/runtime-deps/package.json', 'packages/app-entry/runtime-deps/package-lock.json') }}
 
-      - name: Install Runtime Deps for Rollup
+      - name: Install Runtime Deps for Runtime
         if: steps.cache-runtime-node-modules.outputs.cache-hit != 'true'
         working-directory: packages/app-entry/runtime-deps/
         run: |
@@ -131,6 +131,8 @@ jobs:
         working-directory: packages/app-entry/runtime-deps/
         run: |
           node-prune
+          # Remove the SWC files from the runtime deps (these are dev time only)
+          rm -rf node_modules/@next/swc-*
 
       - name: Combine Build Outputs
         run: |
@@ -140,9 +142,9 @@ jobs:
           cp -R ./packages/app/.next ./packages/cdk-construct/lib/${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}
           rm -rf ./packages/cdk-construct/lib/${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}/.next/cache
           cp -R ./packages/app/next.config.js ./packages/cdk-construct/lib/${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}
-          # Remove the SWC files from the runtime deps (these are dev time only)
-          rm -rf ./packages/app-entry/runtime-deps/node_modules/@next/swc-*
           cp -R ./packages/app-entry/runtime-deps/node_modules ./packages/cdk-construct/lib/${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}
+          cp -R ./packages/app-entry/run.sh ./packages/cdk-construct/lib/${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}
+          cp -R ./packages/app-entry/server.js ./packages/cdk-construct/lib/${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}
 
       # Prevent the static files from getting pulled into the Lambda
       - name: Remove Static Files from App Build
