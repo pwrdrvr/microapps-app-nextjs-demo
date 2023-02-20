@@ -50,12 +50,12 @@ jobs:
         run: npm ci
 
       # - name: Cache App Build Node Modules
-      #   id: cache-node-modules-app
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: |
-      #       packages/app/node_modules
-      #     key: node-modules-app-${{ hashFiles('package.json', 'packages/app/package-lock.json', 'packages/app/patches/*') }}
+        id: cache-node-modules-app
+        uses: actions/cache@v3
+        with:
+          path: |
+            packages/app/node_modules
+          key: node-modules-app-${{ hashFiles('package.json', 'packages/app/package-lock.json', 'packages/app/patches/*') }}
 
       # Fixes errors due to JSII tsconfig.json not ignoring libs
       # node_modules/flatpickr/dist/types/instance.d.ts(37,21): error TS2304: Cannot find name 'Node'.
@@ -93,7 +93,7 @@ jobs:
       # npm will not install modules in a workspace folder if there
       # is a package.json in the parent folder, so move it out of the way
       - name: Install Runtime Deps for outputTracing
-        # if: steps.cache-node-modules-app.outputs.cache-hit != 'true'
+        if: steps.cache-node-modules-app.outputs.cache-hit != 'true'
         working-directory: packages/app/
         run: |
           mv ../../package.json ../../package.json.hide
@@ -131,6 +131,16 @@ jobs:
           du -sh ./packages/cdk-construct/lib/${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}/server/*
           du -sh ./packages/cdk-construct/lib/${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}/server/.next/*
           du -sh ./packages/cdk-construct/lib/${{ inputs.APP_CONSTRUCT_FOLDER_NAME }}/static_files/*
+
+      - name: Build the NPM tarball for Examination
+        working-directory: packages/cdk-construct/
+        run: |
+          npm pack
+      - name: Upload NPM tarball
+        uses: actions/upload-artifact@v3
+        with:
+          name: cdk_npm_package
+          path: packages/cdk-construct/pwrdrvr-microapps-app-${{ env.APP_NAME }}-cdk-${{ inputs.packageVersion }}.tgz
 
       # Upload Artifact
       - name: Zip Package
