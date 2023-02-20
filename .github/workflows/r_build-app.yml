@@ -49,7 +49,7 @@ jobs:
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm ci
 
-      # - name: Cache App Build Node Modules
+      - name: Cache App Build Node Modules
         id: cache-node-modules-app
         uses: actions/cache@v3
         with:
