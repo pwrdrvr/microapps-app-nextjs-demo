@@ -55,7 +55,7 @@ jobs:
         with:
           path: |
             packages/app/node_modules
-          key: node-modules-app-${{ hashFiles('package.json', 'packages/app/package-lock.json', 'packages/app/patches/*') }}
+          key: node-modules-app-${{ hashFiles('package.json', 'packages/app/package.json', 'packages/app/package-lock.json', 'packages/app/patches/*') }}
 
       # Fixes errors due to JSII tsconfig.json not ignoring libs
       # node_modules/flatpickr/dist/types/instance.d.ts(37,21): error TS2304: Cannot find name 'Node'.
