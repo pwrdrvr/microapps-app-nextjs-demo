@@ -31,7 +31,7 @@
     "lib/*.d.ts",
     "lib/microapps-app-nextjs-demo/server/*",
     "lib/microapps-app-nextjs-demo/server/.next/*",
-    "lib/microapps-app-nextjs-demo/server/.next/node_modules/*",
+    "lib/microapps-app-nextjs-demo/server/node_modules/*",
     "lib/microapps-app-nextjs-demo/static_files/*",
     "package.json"
   ],
