@@ -32,6 +32,10 @@ module.exports = {
 
   assetPrefix: isProd ? BASE_PREFIX_APP_WITH_VERSION : BASE_PREFIX_APP,
 
+  // Compression is on by default, but we want to turn it off because
+  // we're using AWS Lambda Web Adapter to handle the compression
+  compress: false,
+
   webpack: (config, options) => {
     const { dev, isServer } = options;
 
