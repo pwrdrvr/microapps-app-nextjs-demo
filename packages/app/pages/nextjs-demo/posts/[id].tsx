@@ -1,8 +1,9 @@
 import Head from 'next/head';
-import Layout from '../../components/layout';
-import { getAllPostIds, getPostData } from '../../lib/posts';
-import Date from '../../components/date';
-import utilStyles from '../../styles/utils.module.css';
+import React from 'react';
+import Layout from '../../../components/layout';
+import { getAllPostIds, getPostData } from '../../../lib/posts';
+import Date from '../../../components/date';
+import utilStyles from '../../../styles/utils.module.css';
 
 // Note: [...id].tsx would be a catch all for /posts/a/b/c
 // In that case, return the id as an array of folder names ['a', 'b', 'c']
@@ -11,7 +12,11 @@ import utilStyles from '../../styles/utils.module.css';
 // Dev: Runs on every page load
 // Prod: Runs at build time
 //
-export async function getStaticProps({ params }) {
+export async function getStaticProps({
+  params,
+}: {
+  params: { id: string };
+}): Promise<{ props: { postData: unknown } }> {
   const postData = await getPostData(params.id);
   return {
     props: {

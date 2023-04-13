@@ -1,11 +1,11 @@
 import Head from 'next/head';
 import { GetStaticPropsResult } from 'next';
-import React from 'react';
-import Layout, { siteTitle } from '../components/layout';
-import utilStyles from '../styles/utils.module.css';
-import { getSortedPostsData } from '../lib/posts';
+import Layout, { siteTitle } from '../../components/layout';
+import utilStyles from '../../styles/utils.module.css';
+import { getSortedPostsData } from '../../lib/posts';
 import Link from 'next/link';
-import Date from '../components/date';
+import Date from '../../components/date';
+import React from 'react';
 
 //
 // getStaticProps runs server-side and is not included in the client-side
@@ -41,7 +41,11 @@ export async function getStaticProps(): Promise<
 //   }
 // }
 
-export default function Home({ allPostsData }): JSX.Element {
+export default function Home({
+  allPostsData,
+}: {
+  allPostsData: ReturnType<typeof getSortedPostsData>;
+}): JSX.Element {
   return (
     <Layout home>
       <Head>
