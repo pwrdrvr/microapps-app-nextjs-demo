@@ -1,9 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-// const path = require('path');
-// next-compose-plugins
-// const withPlugins = require('next-compose-plugins');
-// next-images
-// const withImages = require('next-images')
+const { i18n } = require('./next-i18next.config');
+
 const isProd = process.env.NODE_ENV === 'production';
 
 const BASE_PREFIX_APP = '/nextjs-demo';
@@ -16,11 +13,13 @@ const BASE_PREFIX_APP_WITH_VERSION = `${BASE_PREFIX_APP}${BASE_VERSION_ONLY}`;
  * @type {import('next').NextConfig}
  */
 module.exports = {
-  output: 'standalone',
+  ...(isProd ? { output: 'standalone' } : {}),
   outputFileTracing: isProd,
   experimental: {
     bundleServerPackages: isProd,
   },
+
+  i18n,
 
   // We want the static assets, api calls, and _next/data calls
   // to have /nextjs-demo/0.0.0/ as the prefix so they route cleanly
@@ -64,8 +63,8 @@ module.exports = {
     return [
       {
         /** Static Assets and getServerSideProps (_next/data/) */
-        source: `${BASE_PREFIX_APP_WITH_VERSION}/_next/:path*`,
-        destination: `/_next/:path*`,
+        source: `${BASE_PREFIX_APP_WITH_VERSION}/_next/static/:path*`,
+        destination: `/_next/static/:path*`,
       },
       {
         /** Image optimizer (not tested yet) */
@@ -97,5 +96,9 @@ module.exports = {
   publicRuntimeConfig: {
     // Will be available on both server and client
     staticFolder: isProd ? BASE_PREFIX_APP_WITH_VERSION : BASE_PREFIX_APP_WITH_VERSION,
+  },
+
+  typescript: {
+    tsconfigPath: './tsconfig.json',
   },
 };
