@@ -33,10 +33,10 @@ jobs:
         id: prSuffix
         run: |
           if [ -n "${PR_NUMBER}" ]; then
-            echo "::set-output name=prSuffix::-pr-${PR_NUMBER}"
+            echo "prSuffix=-pr-${PR_NUMBER}" >> $GITHUB_OUTPUT
             echo "PR_SUFFIX=-pr-"${PR_NUMBER} >> $GITHUB_ENV
           else
-            echo "::set-output name=prSuffix::"
+            echo "prSuffix=" >> $GITHUB_OUTPUT
             echo "PR_SUFFIX=" >> $GITHUB_ENV
           fi
 
@@ -70,17 +70,17 @@ jobs:
       - name: Extract Current NPM Version
         run: |
           echo 'PACKAGE_VERSION_ORIG='$(node -p -e "require('./package.json').version") >> $GITHUB_ENV
-          echo "::set-output name=packageVersion::${PACKAGE_VERSION_ORIG}"
+          echo "packageVersion=${PACKAGE_VERSION_ORIG}" >> $GITHUB_OUTPUT
 
       - name: Compute NPM Version
         id: packageVersion
         run: |
           if [ -n "${PR_NUMBER}" ]; then
             echo 'PACKAGE_VERSION='${PACKAGE_VERSION_ORIG}-pr.${PR_NUMBER} >> $GITHUB_ENV
-            echo "::set-output name=packageVersion::${PACKAGE_VERSION_ORIG}-pr.${PR_NUMBER}"
+            echo "packageVersion=${PACKAGE_VERSION_ORIG}-pr.${PR_NUMBER}" >> $GITHUB_OUTPUT
           else
             echo 'PACKAGE_VERSION='${PACKAGE_VERSION_ORIG} >> $GITHUB_ENV
-            echo "::set-output name=packageVersion::${PACKAGE_VERSION_ORIG}"
+            echo "packageVersion=${PACKAGE_VERSION_ORIG}" >> $GITHUB_OUTPUT
           fi
 
       - name: Create version.txt

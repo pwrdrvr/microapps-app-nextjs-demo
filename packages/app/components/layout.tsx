@@ -4,11 +4,18 @@ import styles from './layout.module.css';
 import utilStyles from '../styles/utils.module.css';
 import Link from 'next/link';
 import getConfig from 'next/config';
+import React from 'react';
 
 const name = 'PwrDrvr';
-export const siteTitle = 'PwrDrvr Website - 2';
+export const siteTitle = 'PwrDrvr - Next.js Demo';
 
-export default function Layout({ children, home = undefined }) {
+export default function Layout({
+  children,
+  home = undefined,
+}: {
+  children: React.ReactNode;
+  home?: boolean;
+}): JSX.Element {
   const base = getConfig().publicRuntimeConfig.staticFolder;
 
   return (
@@ -41,7 +48,7 @@ export default function Layout({ children, home = undefined }) {
           </>
         ) : (
           <>
-            <Link href="/">
+            <Link href="/nextjs-demo">
               <Image
                 priority
                 src={`${base}/images/profile.jpg`}
@@ -53,7 +60,7 @@ export default function Layout({ children, home = undefined }) {
               />
             </Link>
             <h2 className={utilStyles.headingLg}>
-              <Link href="/" className={utilStyles.colorInherit}>
+              <Link href="/nextjs-demo" className={utilStyles.colorInherit}>
                 {name}
               </Link>
             </h2>
@@ -63,7 +70,7 @@ export default function Layout({ children, home = undefined }) {
       <main>{children}</main>
       {!home && (
         <div className={styles.backToHome}>
-          <Link href="/">← Back to home</Link>
+          <Link href="/nextjs-demo">← Back to home</Link>
         </div>
       )}
     </div>

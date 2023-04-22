@@ -22,15 +22,12 @@ module.exports = {
     bundleServerPackages: isProd,
   },
 
-  // We want the app under the app name like /nextjs-demo
-  basePath: BASE_PREFIX_APP,
-
   // We want the static assets, api calls, and _next/data calls
   // to have /nextjs-demo/0.0.0/ as the prefix so they route cleanly
   // to an isolated folder on the S3 bucket and to a specific
   // lambda URL without having to do any path manipulation
 
-  assetPrefix: isProd ? BASE_PREFIX_APP_WITH_VERSION : BASE_PREFIX_APP,
+  assetPrefix: isProd ? BASE_PREFIX_APP_WITH_VERSION : BASE_PREFIX_APP_WITH_VERSION,
 
   // Compression is on by default, but we want to turn it off because
   // we're using AWS Lambda Web Adapter to handle the compression
@@ -67,7 +64,7 @@ module.exports = {
     return [
       {
         /** Static Assets and getServerSideProps (_next/data/) */
-        source: `${BASE_VERSION_ONLY}/_next/:path*`,
+        source: `${BASE_PREFIX_APP_WITH_VERSION}/_next/:path*`,
         destination: `/_next/:path*`,
       },
       {
@@ -80,13 +77,13 @@ module.exports = {
         // Only used for local development
         // On deployed environments, the images are served from S3
         // and image requests will never reach this rewrite
-        source: `${BASE_VERSION_ONLY}/images/:query*`,
+        source: `${BASE_PREFIX_APP_WITH_VERSION}/images/:query*`,
         destination: `/images/:query*`,
       },
       {
         // Favicon
         // Only used for local development
-        source: `${BASE_VERSION_ONLY}/favicon.ico`,
+        source: `${BASE_PREFIX_APP_WITH_VERSION}/favicon.ico`,
         destination: `/favicon.ico`,
       },
       /** Api Calls */
@@ -99,6 +96,6 @@ module.exports = {
 
   publicRuntimeConfig: {
     // Will be available on both server and client
-    staticFolder: isProd ? BASE_PREFIX_APP_WITH_VERSION : BASE_PREFIX_APP,
+    staticFolder: isProd ? BASE_PREFIX_APP_WITH_VERSION : BASE_PREFIX_APP_WITH_VERSION,
   },
 };
