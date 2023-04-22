@@ -26,7 +26,8 @@ env:
   APP_CONSTRUCT_FOLDER_NAME: microapps-app-nextjs-demo
   APP_PACKAGE_NAME: '@pwrdrvr/microapps-app-nextjs-demo'
   ENV: prod
-  DEPLOYER_LAMBDA_NAME: microapps-core-ghpublic-deployer-prod
+  # DEPLOYER_LAMBDA_NAME: microapps-core-ghpublic-deployer-prod
+  DEPLOYER_LAMBDA_NAME: microapps-core-ghpublic-deployer-prod-pr-329
   AWS_REGION: us-east-2
 
 jobs:
