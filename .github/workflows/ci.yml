@@ -109,7 +109,7 @@ jobs:
         run: unzip -o nextjs.zip
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           role-session-name: microapps-app-${{ env.APP_NAME }}-build
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/builder-writeRole
