@@ -73,7 +73,7 @@ export default function Layout({
       <main>{children}</main>
       {!home && (
         <div className={styles.backToHome}>
-          <Link href="/">{`← ${t('back-to-home')}`}</Link>
+          <Link href="/nextjs-demo">{`← ${t('back-to-home')}`}</Link>
         </div>
       )}
       {/* </Trans> */}
