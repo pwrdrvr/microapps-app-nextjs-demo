@@ -36,7 +36,6 @@ import Date from '../../components/date';
 
 export async function getServerSideProps(context) {
   const allPostsData = getSortedPostsData();
-  debugger;
   return {
     props: {
       allPostsData,
