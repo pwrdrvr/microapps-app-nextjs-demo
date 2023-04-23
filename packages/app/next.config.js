@@ -1,9 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-// const path = require('path');
-// next-compose-plugins
-// const withPlugins = require('next-compose-plugins');
-// next-images
-// const withImages = require('next-images')
+const i18NextConfig = require('./next-i18next.config');
+const { i18n } = i18NextConfig;
+
 const isProd = process.env.NODE_ENV === 'production';
 
 const BASE_PREFIX_APP = '/nextjs-demo';
@@ -16,11 +14,13 @@ const BASE_PREFIX_APP_WITH_VERSION = `${BASE_PREFIX_APP}${BASE_VERSION_ONLY}`;
  * @type {import('next').NextConfig}
  */
 module.exports = {
-  output: 'standalone',
+  ...(isProd ? { output: 'standalone' } : {}),
   outputFileTracing: isProd,
   experimental: {
     bundleServerPackages: isProd,
   },
+
+  i18n,
 
   // We want the static assets, api calls, and _next/data calls
   // to have /nextjs-demo/0.0.0/ as the prefix so they route cleanly
@@ -61,41 +61,49 @@ module.exports = {
   // in the path, which is perfect because that's where the assets
   // will be on the S3 bucket.
   async rewrites() {
-    return [
-      {
-        /** Static Assets and getServerSideProps (_next/data/) */
-        source: `${BASE_PREFIX_APP_WITH_VERSION}/_next/:path*`,
-        destination: `/_next/:path*`,
-      },
-      {
-        /** Image optimizer (not tested yet) */
-        source: `${BASE_VERSION_ONLY}/_next/image/:query*`,
-        destination: `/_next/image/:query*`,
-      },
-      {
-        // Images
-        // Only used for local development
-        // On deployed environments, the images are served from S3
-        // and image requests will never reach this rewrite
-        source: `${BASE_PREFIX_APP_WITH_VERSION}/images/:query*`,
-        destination: `/images/:query*`,
-      },
-      {
-        // Favicon
-        // Only used for local development
-        source: `${BASE_PREFIX_APP_WITH_VERSION}/favicon.ico`,
-        destination: `/favicon.ico`,
-      },
-      /** Api Calls */
-      {
-        source: `${BASE_VERSION_ONLY}/api/:path*`,
-        destination: `/api/:path*`,
-      },
-    ];
+    return {
+      beforeFiles: [
+        {
+          /** Static Assets and getServerSideProps (_next/data/) */
+          source: `${BASE_PREFIX_APP_WITH_VERSION}/_next/static/:path*`,
+          destination: `/_next/static/:path*`,
+        },
+        {
+          // Favicon
+          // Only used for local development
+          source: `${BASE_PREFIX_APP_WITH_VERSION}/favicon.ico`,
+          destination: `/favicon.ico`,
+        },
+        {
+          // Images
+          // Only used for local development
+          // On deployed environments, the images are served from S3
+          // and image requests will never reach this rewrite
+          source: `${BASE_PREFIX_APP_WITH_VERSION}/images/:query*`,
+          destination: `/images/:query*`,
+        },
+      ],
+      afterFiles: [
+        {
+          /** Image optimizer (not tested yet) */
+          source: `${BASE_VERSION_ONLY}/_next/image/:query*`,
+          destination: `/_next/image/:query*`,
+        },
+        /** Api Calls */
+        {
+          source: `${BASE_VERSION_ONLY}/api/:path*`,
+          destination: `/api/:path*`,
+        },
+      ],
+    };
   },
 
   publicRuntimeConfig: {
     // Will be available on both server and client
     staticFolder: isProd ? BASE_PREFIX_APP_WITH_VERSION : BASE_PREFIX_APP_WITH_VERSION,
+  },
+
+  typescript: {
+    tsconfigPath: './tsconfig.json',
   },
 };

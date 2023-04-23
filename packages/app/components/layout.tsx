@@ -1,22 +1,23 @@
 import Head from 'next/head';
 import Image from 'next/image';
-import styles from './layout.module.css';
-import utilStyles from '../styles/utils.module.css';
 import Link from 'next/link';
 import getConfig from 'next/config';
 import React from 'react';
+import { useTranslation } from 'next-i18next';
+import styles from './layout.module.css';
+import utilStyles from '../styles/utils.module.css';
 
-const name = 'PwrDrvr';
 export const siteTitle = 'PwrDrvr - Next.js Demo';
 
-export default function Layout({
-  children,
-  home = undefined,
-}: {
+const name = 'PwrDrvr';
+export default function Layout(context: {
   children: React.ReactNode;
   home?: boolean;
+  locale: string;
 }): JSX.Element {
+  const { children, home = undefined } = context;
   const base = getConfig().publicRuntimeConfig.staticFolder;
+  const { t } = useTranslation('common');
 
   return (
     <div className={styles.container}>
@@ -54,13 +55,13 @@ export default function Layout({
                 src={`${base}/images/profile.jpg`}
                 unoptimized
                 className={utilStyles.borderCircle}
-                height={108}
-                width={108}
+                height={144}
+                width={144}
                 alt={name}
               />
             </Link>
             <h2 className={utilStyles.headingLg}>
-              <Link href="/nextjs-demo" className={utilStyles.colorInherit}>
+              <Link href={`/${context.locale}/nextjs-demo`} className={utilStyles.colorInherit}>
                 {name}
               </Link>
             </h2>
@@ -70,7 +71,7 @@ export default function Layout({
       <main>{children}</main>
       {!home && (
         <div className={styles.backToHome}>
-          <Link href="/nextjs-demo">← Back to home</Link>
+          <Link href={`/nextjs-demo`}>{`← ${t('back-to-home')}`}</Link>
         </div>
       )}
     </div>

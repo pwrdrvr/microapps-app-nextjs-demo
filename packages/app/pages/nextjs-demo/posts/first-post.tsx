@@ -6,7 +6,7 @@ import React from 'react';
 export default function FirstPost(): JSX.Element {
   return (
     <>
-      <Layout home>
+      <Layout home locale="en">
         <Head>
           <title>First Post</title>
         </Head>

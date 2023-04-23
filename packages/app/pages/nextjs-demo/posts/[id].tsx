@@ -4,6 +4,7 @@ import Layout from '../../../components/layout';
 import { getAllPostIds, getPostData } from '../../../lib/posts';
 import Date from '../../../components/date';
 import utilStyles from '../../../styles/utils.module.css';
+import { getServerTranslations } from '../../../lib/getServerTranslations';
 
 // Note: [...id].tsx would be a catch all for /posts/a/b/c
 // In that case, return the id as an array of folder names ['a', 'b', 'c']
@@ -14,13 +15,17 @@ import utilStyles from '../../../styles/utils.module.css';
 //
 export async function getStaticProps({
   params,
+  locale,
 }: {
   params: { id: string };
-}): Promise<{ props: { postData: unknown } }> {
+  locale: string;
+}): Promise<{ props: { postData: unknown; locale: string } }> {
   const postData = await getPostData(params.id);
   return {
     props: {
       postData,
+      locale,
+      ...(await getServerTranslations(locale, ['common'])),
     },
   };
 }
@@ -29,17 +34,22 @@ export async function getStaticProps({
 // Dev: Runs on every page load
 // Prod: Runs at build time
 //
-export async function getStaticPaths() {
+export async function getStaticPaths(props) {
   const paths = getAllPostIds();
-  return {
-    paths,
+  const result = {
+    paths: [
+      ...props.locales.flatMap((locale) =>
+        paths.map((path) => ({ params: { id: path.params.id }, locale })),
+      ),
+    ],
     fallback: false, // Used to set handling for non-existing paths
   };
+  return result;
 }
 
-export default function Post({ postData }) {
+export default function Post({ postData, locale }): JSX.Element {
   return (
-    <Layout>
+    <Layout locale={locale}>
       <Head>
         <title>{postData.title}</title>
       </Head>
