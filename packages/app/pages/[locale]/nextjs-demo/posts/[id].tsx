@@ -1,11 +1,12 @@
 import Head from 'next/head';
 import React from 'react';
+import { useRouter } from 'next/router';
 // import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import Layout from '../../../components/layout';
-import { getAllPostIds, getPostData } from '../../../lib/posts';
-import Date from '../../../components/date';
-import utilStyles from '../../../styles/utils.module.css';
-import { getServerTranslations } from '../../../lib/getServerTranslations';
+import Layout from '../../../../components/layout';
+import { getAllPostIds, getPostData } from '../../../../lib/posts';
+import Date from '../../../../components/date';
+import utilStyles from '../../../../styles/utils.module.css';
+import { getServerTranslations } from '../../../../lib/getServerTranslations';
 
 // Note: [...id].tsx would be a catch all for /posts/a/b/c
 // In that case, return the id as an array of folder names ['a', 'b', 'c']
@@ -16,16 +17,15 @@ import { getServerTranslations } from '../../../lib/getServerTranslations';
 //
 export async function getStaticProps({
   params,
-  locale,
 }: {
-  params: { id: string };
-  locale: string;
-}): Promise<{ props: { postData: unknown } }> {
+  params: { id: string; locale: string };
+}): Promise<{ props: { postData: unknown; locale: string } }> {
   const postData = await getPostData(params.id);
   return {
     props: {
       postData,
-      ...(await getServerTranslations(locale, ['common'])),
+      locale: params.locale,
+      ...(await getServerTranslations(params.locale, ['common'])),
     },
   };
 }
@@ -36,15 +36,20 @@ export async function getStaticProps({
 //
 export async function getStaticPaths() {
   const paths = getAllPostIds();
-  return {
-    paths,
+  const result = {
+    paths: [
+      ...['en', 'sv'].flatMap((locale) =>
+        paths.map((path) => ({ params: { locale, id: path.params.id } })),
+      ),
+    ],
     fallback: false, // Used to set handling for non-existing paths
   };
+  return result;
 }
 
-export default function Post({ postData }): JSX.Element {
+export default function Post({ postData, locale }): JSX.Element {
   return (
-    <Layout>
+    <Layout locale={locale}>
       <Head>
         <title>{postData.title}</title>
       </Head>

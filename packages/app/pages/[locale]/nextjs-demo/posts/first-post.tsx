@@ -1,12 +1,12 @@
 import Head from 'next/head';
-import Layout from '../../../components/layout';
+import Layout from '../../../../components/layout';
 import utilStyles from '../../../styles/utils.module.css';
 import React from 'react';
 
 export default function FirstPost(): JSX.Element {
   return (
     <>
-      <Layout home>
+      <Layout home locale="en">
         <Head>
           <title>First Post</title>
         </Head>

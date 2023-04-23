@@ -20,7 +20,7 @@ module.exports = {
     bundleServerPackages: isProd,
   },
 
-  i18n,
+  // i18n,
 
   // We want the static assets, api calls, and _next/data calls
   // to have /nextjs-demo/0.0.0/ as the prefix so they route cleanly
