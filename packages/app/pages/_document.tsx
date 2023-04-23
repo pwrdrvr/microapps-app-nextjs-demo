@@ -9,7 +9,8 @@ type Props = DocumentProps & {
 
 class MyDocument extends Document<Props> {
   render(): JSX.Element {
-    const currentLocale = this.props.__NEXT_DATA__.locale ?? i18nextConfig.i18n.defaultLocale;
+    const currentLocale = this.props.__NEXT_DATA__.locale || i18nextConfig.i18n.defaultLocale;
+
     console.log(currentLocale);
     return (
       <Html lang={currentLocale}>

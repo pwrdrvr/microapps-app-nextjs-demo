@@ -1,11 +1,12 @@
 import Head from 'next/head';
-import { GetStaticPropsResult } from 'next';
+import React from 'react';
+import { useTranslation, Trans } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Link from 'next/link';
 import Layout, { siteTitle } from '../../components/layout';
 import utilStyles from '../../styles/utils.module.css';
 import { getSortedPostsData } from '../../lib/posts';
-import Link from 'next/link';
 import Date from '../../components/date';
-import React from 'react';
 
 //
 // getStaticProps runs server-side and is not included in the client-side
@@ -14,16 +15,16 @@ import React from 'react';
 // Dev: Runs on every page load
 // Prod: Runs on build
 //
-export async function getStaticProps(): Promise<
-  GetStaticPropsResult<{ allPostsData: ReturnType<typeof getSortedPostsData> }>
-> {
-  const allPostsData = getSortedPostsData();
-  return {
-    props: {
-      allPostsData,
-    },
-  };
-}
+// export async function getStaticProps(): Promise<
+//   GetStaticPropsResult<{ allPostsData: ReturnType<typeof getSortedPostsData> }>
+// > {
+//   const allPostsData = getSortedPostsData();
+//   return {
+//     props: {
+//       allPostsData,
+//     },
+//   };
+// }
 
 //
 // getServerSideProps - Runs on every page load.
@@ -33,26 +34,27 @@ export async function getStaticProps(): Promise<
 // SWR - Next.js provided client side data reloader... suggested to use.
 //
 
-// export async function getServerSideProps(context) {
-//   return {
-//     props: {
-//       // props for your component
-//     }
-//   }
-// }
+export async function getServerSideProps(context) {
+  const allPostsData = getSortedPostsData();
+  debugger;
+  return {
+    props: {
+      allPostsData,
+      ...(await serverSideTranslations(context.locale, ['common'])),
+    },
+  };
+}
 
-export default function Home({
-  allPostsData,
-}: {
-  allPostsData: ReturnType<typeof getSortedPostsData>;
-}): JSX.Element {
+export default function Home({ allPostsData }): JSX.Element {
+  const { t } = useTranslation('common');
   return (
+    // <Trans t={t}>
     <Layout home>
       <Head>
         <title>{siteTitle}</title>
       </Head>
       <section className={utilStyles.headingMd}>
-        <p>[Your Self Introduction]</p>
+        <p>{t('introduction')}</p>
         <p>
           (This is a sample website - you’ll be building a site like this on{' '}
           <a href="https://nextjs.org/learn">our Next.js tutorial</a>.)
@@ -74,5 +76,6 @@ export default function Home({
         </ul>
       </section>
     </Layout>
+    // </Trans>
   );
 }

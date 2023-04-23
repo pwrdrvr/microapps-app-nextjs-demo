@@ -1,5 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { i18n } = require('./next-i18next.config');
+const i18NextConfig = require('./next-i18next.config');
+const { i18n } = i18NextConfig;
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -60,37 +61,41 @@ module.exports = {
   // in the path, which is perfect because that's where the assets
   // will be on the S3 bucket.
   async rewrites() {
-    return [
-      {
-        /** Static Assets and getServerSideProps (_next/data/) */
-        source: `${BASE_PREFIX_APP_WITH_VERSION}/_next/static/:path*`,
-        destination: `/_next/static/:path*`,
-      },
-      {
-        /** Image optimizer (not tested yet) */
-        source: `${BASE_VERSION_ONLY}/_next/image/:query*`,
-        destination: `/_next/image/:query*`,
-      },
-      {
-        // Images
-        // Only used for local development
-        // On deployed environments, the images are served from S3
-        // and image requests will never reach this rewrite
-        source: `${BASE_PREFIX_APP_WITH_VERSION}/images/:query*`,
-        destination: `/images/:query*`,
-      },
-      {
-        // Favicon
-        // Only used for local development
-        source: `${BASE_PREFIX_APP_WITH_VERSION}/favicon.ico`,
-        destination: `/favicon.ico`,
-      },
-      /** Api Calls */
-      {
-        source: `${BASE_VERSION_ONLY}/api/:path*`,
-        destination: `/api/:path*`,
-      },
-    ];
+    return {
+      beforeFiles: [
+        {
+          /** Static Assets and getServerSideProps (_next/data/) */
+          source: `${BASE_PREFIX_APP_WITH_VERSION}/_next/static/:path*`,
+          destination: `/_next/static/:path*`,
+        },
+        {
+          // Favicon
+          // Only used for local development
+          source: `${BASE_PREFIX_APP_WITH_VERSION}/favicon.ico`,
+          destination: `/favicon.ico`,
+        },
+        {
+          // Images
+          // Only used for local development
+          // On deployed environments, the images are served from S3
+          // and image requests will never reach this rewrite
+          source: `${BASE_PREFIX_APP_WITH_VERSION}/images/:query*`,
+          destination: `/images/:query*`,
+        },
+      ],
+      afterFiles: [
+        {
+          /** Image optimizer (not tested yet) */
+          source: `${BASE_VERSION_ONLY}/_next/image/:query*`,
+          destination: `/_next/image/:query*`,
+        },
+        /** Api Calls */
+        {
+          source: `${BASE_VERSION_ONLY}/api/:path*`,
+          destination: `/api/:path*`,
+        },
+      ],
+    };
   },
 
   publicRuntimeConfig: {
