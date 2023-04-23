@@ -3,11 +3,11 @@ import React from 'react';
 import { useTranslation } from 'next-i18next';
 // import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
-import Layout, { siteTitle } from '../../../components/layout';
-import utilStyles from '../../../styles/utils.module.css';
-import { getSortedPostsData } from '../../../lib/posts';
-import Date from '../../../components/date';
-import { getServerTranslations } from '../../../lib/getServerTranslations';
+import Layout, { siteTitle } from '../../components/layout';
+import utilStyles from '../../styles/utils.module.css';
+import { getSortedPostsData } from '../../lib/posts';
+import Date from '../../components/date';
+import { getServerTranslations } from '../../lib/getServerTranslations';
 
 //
 // getStaticProps runs server-side and is not included in the client-side
@@ -47,7 +47,6 @@ export async function getServerSideProps(context) {
 
 export default function Home({ allPostsData }): JSX.Element {
   const { t, i18n } = useTranslation('common');
-  debugger;
   return (
     // <Trans t={t}>
     <Layout home locale={i18n.language}>

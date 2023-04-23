@@ -18,7 +18,6 @@ export default function Layout(context: {
   const { children, home = undefined } = context;
   const base = getConfig().publicRuntimeConfig.staticFolder;
   const { t } = useTranslation('common');
-  debugger;
 
   return (
     <div className={styles.container}>
