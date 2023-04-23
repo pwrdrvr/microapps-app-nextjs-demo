@@ -1,8 +1,8 @@
 diff --git a/node_modules/next/dist/build/webpack-config.js b/node_modules/next/dist/build/webpack-config.js
-index e999c6a..ea37c3e 100644
+index 8540c03..d164479 100644
 --- a/node_modules/next/dist/build/webpack-config.js
 +++ b/node_modules/next/dist/build/webpack-config.js
-@@ -523,6 +523,12 @@ async function getBaseWebpackConfig(dir, { buildId , config , compilerType , dev
+@@ -1011,6 +1011,12 @@ async function getBaseWebpackConfig(dir, { buildId , config , compilerType , dev
                  }
                  return;
              }
