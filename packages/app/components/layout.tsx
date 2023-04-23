@@ -5,7 +5,7 @@ import utilStyles from '../styles/utils.module.css';
 import Link from 'next/link';
 import getConfig from 'next/config';
 import React from 'react';
-import { useTranslation, Trans } from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 
 export const siteTitle = 'PwrDrvr - Next.js Demo';
 

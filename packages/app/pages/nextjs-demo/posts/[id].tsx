@@ -1,10 +1,11 @@
 import Head from 'next/head';
 import React from 'react';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+// import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Layout from '../../../components/layout';
 import { getAllPostIds, getPostData } from '../../../lib/posts';
 import Date from '../../../components/date';
 import utilStyles from '../../../styles/utils.module.css';
+import { getServerTranslations } from '../../../lib/getServerTranslations';
 
 // Note: [...id].tsx would be a catch all for /posts/a/b/c
 // In that case, return the id as an array of folder names ['a', 'b', 'c']
@@ -24,7 +25,7 @@ export async function getStaticProps({
   return {
     props: {
       postData,
-      ...(await serverSideTranslations(locale, ['common'])),
+      ...(await getServerTranslations(locale, ['common'])),
     },
   };
 }

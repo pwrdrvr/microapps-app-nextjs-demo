@@ -1,12 +1,13 @@
 import Head from 'next/head';
 import React from 'react';
-import { useTranslation, Trans } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
+// import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
 import Layout, { siteTitle } from '../../components/layout';
 import utilStyles from '../../styles/utils.module.css';
 import { getSortedPostsData } from '../../lib/posts';
 import Date from '../../components/date';
+import { getServerTranslations } from '../../lib/getServerTranslations';
 
 //
 // getStaticProps runs server-side and is not included in the client-side
@@ -39,7 +40,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       allPostsData,
-      ...(await serverSideTranslations(context.locale, ['common'])),
+      ...(await getServerTranslations(context.locale, ['common'])),
     },
   };
 }
