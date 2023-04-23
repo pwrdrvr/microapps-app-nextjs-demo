@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import React from 'react';
 import { useTranslation } from 'next-i18next';
-// import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
 import Layout, { siteTitle } from '../../components/layout';
 import utilStyles from '../../styles/utils.module.css';
@@ -48,7 +47,6 @@ export async function getServerSideProps(context) {
 export default function Home({ allPostsData }): JSX.Element {
   const { t, i18n } = useTranslation('common');
   return (
-    // <Trans t={t}>
     <Layout home locale={i18n.language}>
       <Head>
         <title>{siteTitle}</title>
@@ -76,6 +74,5 @@ export default function Home({ allPostsData }): JSX.Element {
         </ul>
       </section>
     </Layout>
-    // </Trans>
   );
 }

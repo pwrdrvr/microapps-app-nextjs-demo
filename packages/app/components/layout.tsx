@@ -21,7 +21,6 @@ export default function Layout(context: {
 
   return (
     <div className={styles.container}>
-      {/* <Trans t={t}> */}
       <Head>
         <link rel="icon" href={`${base}/favicon.ico`} />
         <meta name="description" content="Learn how to build a personal website using Next.js" />
@@ -72,10 +71,9 @@ export default function Layout(context: {
       <main>{children}</main>
       {!home && (
         <div className={styles.backToHome}>
-          <Link href={`/${context.locale}/nextjs-demo`}>{`← ${t('back-to-home')}`}</Link>
+          <Link href={`/nextjs-demo`}>{`← ${t('back-to-home')}`}</Link>
         </div>
       )}
-      {/* </Trans> */}
     </div>
   );
 }
