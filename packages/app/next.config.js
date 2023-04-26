@@ -27,7 +27,7 @@ module.exports = {
   // to an isolated folder on the S3 bucket and to a specific
   // lambda URL without having to do any path manipulation
 
-  assetPrefix: isProd ? BASE_PREFIX_APP_WITH_VERSION : BASE_PREFIX_APP_WITH_VERSION,
+  assetPrefix: BASE_PREFIX_APP_WITH_VERSION,
 
   // Compression is on by default, but we want to turn it off because
   // we're using AWS Lambda Web Adapter to handle the compression
@@ -61,18 +61,41 @@ module.exports = {
   // in the path, which is perfect because that's where the assets
   // will be on the S3 bucket.
   async rewrites() {
+    // Rewrites needed in both Prod and Dev
+    const afterFilesAlways = [
+      // Api Calls
+      {
+        source: `${BASE_VERSION_ONLY}/api/:path*`,
+        destination: `/api/:path*`,
+      },
+    ];
+
+    if (isProd) {
+      return {
+        afterFiles: [...afterFilesAlways],
+      };
+    }
+
+    // Local Development Rewrites
     return {
       beforeFiles: [
         {
-          /** Static Assets and getServerSideProps (_next/data/) */
+          // Static Assets
+          // Next.js evaluates the `source` path after removing `basePath`
+          // A request for `/release/0.0.0/_next/static/...` will be rewritten
+          // to `/0.0.0/_next/static/...` before the `source` is looked up for a match.
+          // This is why we need to use `BASE_VERSION_ONLY` here instead of `BASE_PREFIX_APP_WITH_VERSION`
+          // The destination similarly does not need to repeat the `basePath` because
+          // Next.js is already adding it to any resulting URL.
+          //
+          // When `basePath` is not set this must have BASE_PREFIX_APP_WITH_VERSION
           source: `${BASE_PREFIX_APP_WITH_VERSION}/_next/static/:path*`,
           destination: `/_next/static/:path*`,
         },
         {
-          // Favicon
-          // Only used for local development
-          source: `${BASE_PREFIX_APP_WITH_VERSION}/favicon.ico`,
-          destination: `/favicon.ico`,
+          // Other statics including favicon
+          source: `${BASE_PREFIX_APP_WITH_VERSION}/static/:path*`,
+          destination: `/static/:path*`,
         },
         {
           // Images
@@ -83,24 +106,13 @@ module.exports = {
           destination: `/images/:query*`,
         },
       ],
-      afterFiles: [
-        {
-          /** Image optimizer (not tested yet) */
-          source: `${BASE_VERSION_ONLY}/_next/image/:query*`,
-          destination: `/_next/image/:query*`,
-        },
-        /** Api Calls */
-        {
-          source: `${BASE_VERSION_ONLY}/api/:path*`,
-          destination: `/api/:path*`,
-        },
-      ],
+      afterFiles: [...afterFilesAlways],
     };
   },
 
   publicRuntimeConfig: {
     // Will be available on both server and client
-    staticFolder: isProd ? BASE_PREFIX_APP_WITH_VERSION : BASE_PREFIX_APP_WITH_VERSION,
+    staticFolder: BASE_PREFIX_APP_WITH_VERSION,
   },
 
   typescript: {
