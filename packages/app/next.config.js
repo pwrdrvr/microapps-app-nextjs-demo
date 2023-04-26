@@ -8,6 +8,8 @@ const BASE_PREFIX_APP = '/nextjs-demo';
 const BASE_VERSION_ONLY = '/0.0.0';
 const BASE_PREFIX_APP_WITH_VERSION = `${BASE_PREFIX_APP}${BASE_VERSION_ONLY}`;
 
+const USE_BASE_PATH = process.env.USE_BASE_PATH === 'true';
+
 // const _crypto = require('crypto');
 
 /**
@@ -56,6 +58,14 @@ module.exports = {
     return BASE_VERSION_ONLY.slice(1);
   },
 
+  // If testing with basePath, the app will be at:
+  // - English: http://localhost:3000/nextjs-demo/nextjs-demo
+  // - Swedish: http://localhost:3000/nextjs-demo/sv/nextjs-demo
+  // Without basePath, the app will be at:
+  // - English: http://localhost:3000/nextjs-demo
+  // - Swedish: http://localhost:3000/sv/nextjs-demo
+  ...(USE_BASE_PATH ? { basePath: BASE_PREFIX_APP } : {}),
+
   // Strip the version out of the path
   // When static assets reach S3 they will still have the version
   // in the path, which is perfect because that's where the assets
@@ -89,12 +99,16 @@ module.exports = {
           // Next.js is already adding it to any resulting URL.
           //
           // When `basePath` is not set this must have BASE_PREFIX_APP_WITH_VERSION
-          source: `${BASE_PREFIX_APP_WITH_VERSION}/_next/static/:path*`,
+          source: `${
+            USE_BASE_PATH ? BASE_VERSION_ONLY : BASE_PREFIX_APP_WITH_VERSION
+          }/_next/static/:path*`,
           destination: `/_next/static/:path*`,
         },
         {
           // Other statics including favicon
-          source: `${BASE_PREFIX_APP_WITH_VERSION}/static/:path*`,
+          source: `${
+            USE_BASE_PATH ? BASE_VERSION_ONLY : BASE_PREFIX_APP_WITH_VERSION
+          }/static/:path*`,
           destination: `/static/:path*`,
         },
         {
@@ -102,7 +116,9 @@ module.exports = {
           // Only used for local development
           // On deployed environments, the images are served from S3
           // and image requests will never reach this rewrite
-          source: `${BASE_PREFIX_APP_WITH_VERSION}/images/:query*`,
+          source: `${
+            USE_BASE_PATH ? BASE_VERSION_ONLY : BASE_PREFIX_APP_WITH_VERSION
+          }/images/:query*`,
           destination: `/images/:query*`,
         },
       ],
