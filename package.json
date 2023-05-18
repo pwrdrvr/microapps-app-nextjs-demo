@@ -8,7 +8,7 @@
   },
   "author": "PwrDrvr LLC",
   "license": "MIT",
-  "homepage": "https://github.com/pwrdrvr/microapps-app-nextjs-demo#readme",
+  "homepage": "https://github.com/pwrdrvr/microapps-app-nextjs-demo",
   "workspaces": [
     "packages/*"
   ],
